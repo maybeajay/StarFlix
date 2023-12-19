@@ -12,7 +12,14 @@ const Tab = createBottomTabNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-    <Tab.Navigator>
+    <Tab.Navigator
+    tabBarOptions={{
+      tabBarStyle: {
+        backgroundColor: 'transparent',
+        borderTopWidth: 0,
+      },
+    }}
+    >
       <Tab.Screen name="Home" component={HomeScreen} 
       options={{
         title: "Home",
@@ -21,8 +28,9 @@ export default function App() {
         tabBarIcon: ({size,focused,color}) => {
           return (
             <Image
-              style={{ width: size, height: size }}
+              style={{ width: size, height: size, tintColor: focused ? "gold" : "" }}
               source={require('./assets/home.png')}
+
             />
           );
         },
@@ -33,9 +41,10 @@ export default function App() {
         title: "Trending",
         headerShown: true,
         tabBarActiveTintColor: "gold",
-        tabBarIcon: ()=>{
+        tabBarIcon: ({size,focused,color})=>{
           return(
             <Image
+            style={{ tintColor: focused ? "gold" : ""}}
             source={require('./assets/flame.png')}
             />
           )
