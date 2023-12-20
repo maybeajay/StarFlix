@@ -11,7 +11,7 @@ import { createContext, useState } from "react";
 const Tab = createBottomTabNavigator();
 const Context = createContext();
 export default function App() {
-  const [loading, setLoading]=useState(true);
+  const [loading, setLoading]=useState(false);
   return (
     <Context.Provider
     value={{loading, setLoading}}
