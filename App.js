@@ -6,11 +6,16 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from './screens/HomeScreen';
 import Trending from './screens/Tending';
-
+import { createContext, useState } from "react";
 // screens navigator
 const Tab = createBottomTabNavigator();
+const Context = createContext();
 export default function App() {
+  const [loading, setLoading]=useState(true);
   return (
+    <Context.Provider
+    value={{loading, setLoading}}
+    >
     <NavigationContainer>
     <Tab.Navigator
     tabBarOptions={{
@@ -53,9 +58,12 @@ export default function App() {
       />
     </Tab.Navigator>
     </NavigationContainer>
+    </Context.Provider>
   );
 }
 
 NativeWindStyleSheet.setOutput({
   default: "native",
 });
+
+export {Context};
