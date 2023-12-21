@@ -2,20 +2,15 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import {
-  View,
-  StyleSheet,
-  Text,
-  FlatList,
-  Image,
   ScrollView,
+  Text,
+  SafeAreaView
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { imageUrl } from "../constant";
 import { useContext } from "react";
 // added dependencies
 import axios from "axios";
-import { Star } from "lucide-react-native";
 import { Context } from "../App";
+import HorizontalMoviesData from "../components/HorizontalMoviesData";
 
 const options = {
   method: "GET",
@@ -29,16 +24,17 @@ const options = {
 console.log("+++++", process.env.REACT_BASE_URL);
 
 const Trending = () => {
-  const [trendingMovies, settrendingMovies] = useState([]);
+  const [popularMovies, setPopularMovies] = useState([]);
   const [trendingSeries, settrendingSeries] = useState([]);
+  const [arrivingSoon, setarrivingSoon]=useState([]);
   const { loading, setLoading } = useContext(Context);
   console.log(loading);
 
   // for popular movies
   const getPopularMovies = async () => {
     const res = await axios.request(options);
-    await settrendingMovies(res?.data?.results);
-    console.log(trendingMovies);
+    await setPopularMovies(res?.data?.results);
+    console.log(popularMovies);
   };
 
   // for popular series
@@ -46,7 +42,7 @@ const Trending = () => {
     try {
       setLoading(true);
       const res = await axios.get(
-        `${process.env.REACT_BASE_URL}tv/popular?language=en-US&page=1`,
+        `${process.env.REACT_BASE_URL}tv/popular?language=en-US&page=2`,
         {
           headers: {
             accept: "application/json",
@@ -55,79 +51,53 @@ const Trending = () => {
         }
       );
       await settrendingSeries(res?.data?.results);
+      console.log(trendingSeries);
       setLoading(false);
     } catch (error) {
       setLoading(false);
     }
   };
+
+
+  const getArivingSoonData = async()=>{
+    try {
+      setLoading(true);
+      const res = await axios.get(`${process.env.REACT_BASE_URL}tv/on_the_air?language=en-US&page=1`, {
+        headers:{
+          accept: "application/json",
+          Authorization: `${process.env.REACT_ACCESS_TOKEN}`
+        }
+      })
+      await setarrivingSoon(res?.data?.results);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }finally{
+      setLoading(false);
+    }
+  }
+
+
   useFocusEffect(
     useCallback(() => {
       getPopularMovies();
       getPopularTvSeries();
+      getArivingSoonData();
     }, [])
   );
-  return loading ? (
-    <View>
-      <Text>fetching....</Text>
-    </View>
-  ) : (
+  return(
     <SafeAreaView className="bg-white flex-1">
-      <Text className="color-[#0D111f] text-lg mx-3">Trending Movies!</Text>
-      <SafeAreaView>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          <FlatList
-            data={trendingMovies}
-            horizontal
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <View className="flex mx-5">
-                <Image
-                  source={{ uri: `${imageUrl}${item?.backdrop_path}` }}
-                  style={{ width: 170, height: 200, resizeMode: "contain" }}
-                  className="rounded-md object-contain"
-                />
-                <View className="flex flex-row items-center relative bottom-7 backdrop-blur-lg w-1/2">
-                  <Text className="text-white mx-3 text-md">{item?.title}</Text>
-                  <Text className="bg-transparent text-white text-md">
-                    {item?.vote_average}
-                  </Text>
-                  <Star color="#ffcda5" size={20} />
-                </View>
-              </View>
-            )}
-          />
-        </ScrollView>
-      </SafeAreaView>
-
-
-      <Text className="color-[#0D111f] text-lg mx-3">Popular TV shows!</Text>
-      <SafeAreaView className="mt-7">
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          <FlatList
-            data={trendingSeries}
-            horizontal
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <View className="flex mx-5">
-                <Image
-                  source={{ uri: `${imageUrl}${item?.backdrop_path}` }}
-                  style={{ width: 170, height: 200, resizeMode: "contain" }}
-                  className="rounded-md object-contain"
-                />
-                <View className="flex flex-row items-center relative bottom-7 backdrop-blur-lg w-1/2">
-                  <Text className="text-white mx-3 text-md">{item?.title}</Text>
-                  <Text className="bg-transparent text-white text-md">
-                    {item?.vote_average}
-                  </Text>
-                  <Star color="#ffcda5" size={20} />
-                </View>
-              </View>
-            )}
-          />
-        </ScrollView>
-      </SafeAreaView>
+      <ScrollView showsVerticalScrollIndicator={false}>
+      <Text className="color-[#0D111f] text-lg mx-3 mb-2 mt-4">Trending Movies!</Text>
+      <HorizontalMoviesData data={popularMovies}/>
+      <Text className="color-[#0D111f] text-lg mx-3 mb-6 mt-2">Popular TV shows!</Text>
+      <HorizontalMoviesData data={trendingSeries} />
+      <Text className="color-[#0D111f] text-lg mx-3 mb-6 mt-2">Arriving This Week!</Text>
+      <HorizontalMoviesData data={arrivingSoon} />
+      </ScrollView>
     </SafeAreaView>
   );
+
 };
 
 export default Trending;

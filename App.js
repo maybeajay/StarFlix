@@ -7,6 +7,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from './screens/HomeScreen';
 import Trending from './screens/Tending';
 import { createContext, useState } from "react";
+
 // screens navigator
 const Tab = createBottomTabNavigator();
 const Context = createContext();
