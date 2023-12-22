@@ -6,13 +6,26 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from './screens/HomeScreen';
 import Trending from './screens/Tending';
+import { createContext, useState } from "react";
 
 // screens navigator
 const Tab = createBottomTabNavigator();
+const Context = createContext();
 export default function App() {
+  const [loading, setLoading]=useState(false);
   return (
+    <Context.Provider
+    value={{loading, setLoading}}
+    >
     <NavigationContainer>
-    <Tab.Navigator>
+    <Tab.Navigator
+    tabBarOptions={{
+      tabBarStyle: {
+        backgroundColor: 'transparent',
+        borderTopWidth: 0,
+      },
+    }}
+    >
       <Tab.Screen name="Home" component={HomeScreen} 
       options={{
         title: "Home",
@@ -21,8 +34,9 @@ export default function App() {
         tabBarIcon: ({size,focused,color}) => {
           return (
             <Image
-              style={{ width: size, height: size }}
+              style={{ width: size, height: size, tintColor: focused ? "gold" : "" }}
               source={require('./assets/home.png')}
+
             />
           );
         },
@@ -33,9 +47,10 @@ export default function App() {
         title: "Trending",
         headerShown: true,
         tabBarActiveTintColor: "gold",
-        tabBarIcon: ()=>{
+        tabBarIcon: ({size,focused,color})=>{
           return(
             <Image
+            style={{ tintColor: focused ? "gold" : ""}}
             source={require('./assets/flame.png')}
             />
           )
@@ -44,9 +59,12 @@ export default function App() {
       />
     </Tab.Navigator>
     </NavigationContainer>
+    </Context.Provider>
   );
 }
 
 NativeWindStyleSheet.setOutput({
   default: "native",
 });
+
+export {Context};
