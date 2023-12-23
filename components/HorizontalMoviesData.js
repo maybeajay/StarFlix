@@ -1,11 +1,10 @@
 // project imports
 import React from 'react';
-import {View, ScrollView, SafeAreaView, Image, FlatList, Text} from 'react-native';
+import {View, ScrollView, SafeAreaView, Image, FlatList, Text, Pressable} from 'react-native';
 import { imageUrl } from '../constant';
 // added dependencies
-import { Star } from 'lucide-react-native';
-
-const HorizontalMoviesData = ({data}) => {
+import Ionicons from '@expo/vector-icons/Ionicons';
+const HorizontalMoviesData = ({data, navigation}) => {
     return (
         <SafeAreaView>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
@@ -15,11 +14,17 @@ const HorizontalMoviesData = ({data}) => {
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
               <View className="flex mx-5">
+                <Pressable  
+                onPress={()=>navigation.navigate("Movie Details", {
+                  id: item?.id
+                })}
+                >
                 <Image
-                  source={{ uri: `${imageUrl}${item?.backdrop_path}` }}
+                  source={{ uri: `${imageUrl}${item?.poster_path}` }}
                   style={{ width: 170, height: 200, resizeMode: "contain" }}
                   className="rounded-md object-contain"
                 />
+                </Pressable>
                 <View style={{
                     width: 170,
                     display: 'flex',
@@ -34,7 +39,7 @@ const HorizontalMoviesData = ({data}) => {
                   <Text className="bg-transparent text-white mt-2 text-md">
                     {Math.round(item?.vote_average*10)/10}
                   </Text>
-                  <Star color="#ffcda5" size={20} className='mt-1 ml-1'/>
+                  <Ionicons name="md-star" size={20} color="gold" className="mt-2"/>
                 </View>
                 </View>
               </View>
