@@ -1,12 +1,13 @@
 import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import React, { useCallback, useState } from "react";
-import { View, StyleSheet, Text, ScrollView, Image } from "react-native";
+import { View, Text, ScrollView, Image } from "react-native";
 
 
 // added dependecies
 import { imageUrl } from "../constant";
-
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { BlurView } from "expo-blur";
 
 const MovieDetails = ({ route, navigation }) => {
   const { id } = route?.params;
@@ -33,27 +34,46 @@ const MovieDetails = ({ route, navigation }) => {
   useFocusEffect(useCallback(()=>{
     getDetailsById();
     console.log("MMMMMMMMMMMMm",movieDetails)
-  }, []))
+  }, [id]))
   return (
     <ScrollView>
         <View>
-        <View className="mt-9">
+        <View className="mt-[40px] rounded-lg">
+          <BlurView
+          intensity={40} tint="light" 
+          className="flex items-center" 
+          style={{
+            backgroundColor: "#6936f5",
+          }}
+          >
           <Image
-            source={{ uri: `${imageUrl}${movieDetails?.backdrop_path}` }}
+            source={{ uri: `${imageUrl}${movieDetails?.poster_path}` }}
             style={{
-              width: '80%',
-              height: 200, // Adjust the height to a fixed value
+              width: '70%',
+              height: 400,
+              resizeMode: "contain",
+              padding: 10
             }}
+            className="rounded-lg mt-2 mb-3"
           />
-          <Text>{movieDetails?.title}</Text>
-          <Text>Release Date: {movieDetails?.release_date}</Text>
-          <Text>Overview: {movieDetails?.overview}</Text>
-          {/* Add more Text components for other details you want to display */}
-          <Text>Popularity: {movieDetails?.popularity}</Text>
-          <Text>Vote Average: {movieDetails?.vote_average}</Text>
+          </BlurView>
+          {/* voting average and release year */}
+          <View className="w-[100px] flex flex-row items-center gap-1 bg-[#222] mx-3 opacity-[0.8] relative bottom-[38px] left-[60px] rounded-sm">
+          <Ionicons name="md-star" size={20} color="gold" className="mt-2"/>
+          <Text className="text-white">{Math.round(movieDetails?.vote_average*10)/10}</Text>
+          <Text className="text-white"> | </Text>
+          <Text className="text-white">{movieDetails?.release_date?.slice(0,4)}</Text>
+          </View>
+
+          {/* genre */}
+          <View className="flex flex-row mx-3">
+            {movieDetails && movieDetails?.genres?.map((item)=><View
+            >
+              <Text className="text-md text-[#28303d]">{item?.name} .</Text>
+            </View>)}
+            </View>
         </View>
         </View>
-        <Text>hello</Text>
     </ScrollView>
   );
 };
