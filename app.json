@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "movie",
+    "name": "StarFlix",
     "slug": "movie",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon-home.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splash-screen.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#6936f5"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -19,7 +19,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/adaptive.png",
         "backgroundColor": "#ffffff"
       }
     },
