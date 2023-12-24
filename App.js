@@ -13,18 +13,15 @@ import { createContext, useState } from "react";
 import { Search } from 'lucide-react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Flame } from "lucide-react-native";
+import { createStackNavigator } from "@react-navigation/stack";
+import MovieDetails from "./screens/MovieDetails";
 // screens navigator
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 const Context = createContext();
 
-export default function App() {
-  const [loading, setLoading]=useState(false);
-  return (
-    <Context.Provider
-    value={{loading, setLoading}}
-    >
-    <NavigationContainer style={{
-    }}>
+const BottomNavigator = ()=>{
+  return(
     <Tab.Navigator
      screenOptions={({ route }) => ({
       tabBarStyle: [{
@@ -37,7 +34,7 @@ export default function App() {
     >
       <Tab.Screen name="Home" component={HomeScreen} 
       options={{
-        headerShown: true,
+        headerShown: false,
         tabBarActiveTintColor: "black",
         tabBarShowLabel: false,
         tabBarIcon: ({size,focused,color}) => {
@@ -73,6 +70,23 @@ export default function App() {
       }}
       />
     </Tab.Navigator>
+  )
+}
+
+
+export default function App() {
+  const [loading, setLoading]=useState(false);
+  return (
+    <Context.Provider
+    value={{loading, setLoading}}
+    >
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{
+        headerShown: false
+      }}>
+      <Stack.Screen name="HomeScreen" component={BottomNavigator}/>
+      <Stack.Screen name="Movie Details" component={MovieDetails}/>
+      </Stack.Navigator>
     </NavigationContainer>
     </Context.Provider>
   );

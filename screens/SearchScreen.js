@@ -15,6 +15,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import { imageUrl } from "../constant";
 
+
 // added dependencies
 import Ionicons from '@expo/vector-icons/Ionicons';
 

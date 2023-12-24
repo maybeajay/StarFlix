@@ -8,6 +8,7 @@ const NavigateScreen = ()=>{
         <NavigationContainer>
             <Stack.Navigator>
                 <Stack.Screen name="Movie Details" component={MovieDetails}/>
+                <MovieDetails />
             </Stack.Navigator>
         </NavigationContainer>
     )
