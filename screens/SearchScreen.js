@@ -6,6 +6,8 @@ import {
   View,
   FlatList,
   Image,
+  Pressable,
+  TouchableOpacity,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { Search } from "lucide-react-native";
@@ -13,7 +15,11 @@ import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import { imageUrl } from "../constant";
 
+
 // added dependencies
+import Ionicons from '@expo/vector-icons/Ionicons';
+
+
 const SearchScreen = () => {
   const [query, setQuery] = useState("");
   const [searchMovies, setsearchMovies] = useState([]);
@@ -31,6 +37,7 @@ const SearchScreen = () => {
           },
         }
       );
+      console.log(res?.data?.results)
       const tempSearch = [...res?.data?.results]?.filter((item)=>item.backdrop_path);
       setsearchMovies(tempSearch);
       // console.log(res?.data);
@@ -91,7 +98,7 @@ const SearchScreen = () => {
               marginRight: "auto",
               marginTop: 60,
             }}
-            className="bg-gray-60 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2"
+            className="bg-gray-60 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2"
           >
             <Search
               size={20}
@@ -101,11 +108,15 @@ const SearchScreen = () => {
             <TextInput
               placeholder="Search"
               placeholderTextColor={"#000"}
+              value={query}
               onChangeText={(text) => setQuery(text)}
               style={{
                 width: "100%",
               }}
             />
+          { query.length > 2 ?  <View className="w-6 h-6 bg-[#6936f5] rounded-xl relative right-[50px] items-center">
+            <Pressable onPress={()=>setQuery("")}><Ionicons name="close" size={20} color="white" className="mt-2"/></Pressable>
+             </View> : ""}
           </View>
         </View>
         <View className="flex flex-col p-5">
@@ -136,18 +147,28 @@ const SearchScreen = () => {
                     className="text-md"
                     style={{
                       fontSize: 13,
-                      maxWidth: "80%",
+                      maxWidth: "70%",
                       minWidth: "30%",
                     }}
                   >
                     {item?.title}
                   </Text>
-                  {/* {getGenreLabelFromId(item?.genre_ids)} */}
-                  <Text className="bg-blue-600 w-[50px] text-center text-white rounded-xl mt-2 opacity-[0.6]">
+                  <Text className="bg-[#6936f5] w-[50px] text-center text-white rounded-xl mt-2 opacity-[0.8]">
                     {item?.release_date.slice(0, 4)}
                   </Text>
-                  <View className="flex flex-row  items-center">
-                  {genre.length > 0 && genre.map((genre)=><Text className="bg-blue-600 rounded-xl mt-2 opacity-[0.6] text-white w-[80px]">{genre.name}</Text>)}
+                  <View className="flex flex-row flex-wrap items-center" 
+                  style={{
+                    padding: 2,
+                    columnGap: 8,
+                    maxWidth: "70%"
+                  }}
+                  >
+                  {genre.length > 0 && genre.map((genre)=><Text className="mt-2 opacity-[0.7] color-[#171e36] text-md"
+                  style={{
+                    // maxWidth: '85px',
+                    // // minWidth: "50px"
+                  }}
+                  >{genre.name}</Text>)}
                 </View>
                 </View>
               </View>

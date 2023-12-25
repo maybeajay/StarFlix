@@ -2,8 +2,11 @@
 import React from 'react';
 import {View, ScrollView, SafeAreaView, Image, FlatList, Text, Pressable} from 'react-native';
 import { imageUrl } from '../constant';
+
 // added dependencies
 import Ionicons from '@expo/vector-icons/Ionicons';
+
+
 const HorizontalMoviesData = ({data, navigation}) => {
     return (
         <SafeAreaView>
@@ -16,7 +19,7 @@ const HorizontalMoviesData = ({data, navigation}) => {
               <View className="flex mx-5">
                 <Pressable  
                 onPress={()=>navigation.navigate("Movie Details", {
-                  id: item?.id
+                  id: item?.id,
                 })}
                 >
                 <Image
