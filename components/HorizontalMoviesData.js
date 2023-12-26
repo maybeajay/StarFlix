@@ -7,7 +7,7 @@ import { imageUrl } from '../constant';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 
-const HorizontalMoviesData = ({data, navigation}) => {
+const HorizontalMoviesData = ({data, navigation, media}) => {
     return (
         <SafeAreaView>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
@@ -20,6 +20,7 @@ const HorizontalMoviesData = ({data, navigation}) => {
                 <Pressable  
                 onPress={()=>navigation.navigate("Movie Details", {
                   id: item?.id,
+                  media: media,
                 })}
                 >
                 <Image
@@ -34,7 +35,7 @@ const HorizontalMoviesData = ({data, navigation}) => {
                 }}>
                 <View className="flex flex-row relative bottom-7 justify-center h-10 rounded-sm" 
                 style={{
-                    backdropFilter: 'blur(100px)', 
+                    backdropFilter: 'blur(10px)', 
                     backgroundColor: 'rgba(255, 255, 255, 0.6)'
                 }}
                 >

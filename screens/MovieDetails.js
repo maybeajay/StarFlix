@@ -14,18 +14,22 @@ import {
 import { imageUrl } from "../constant";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { BlurView } from "expo-blur";
+import HorizontalMoviesData from "../components/HorizontalMoviesData";
 
 const MovieDetails = ({ route, navigation }) => {
-  const { id } = route?.params;
+  const { id, media } = route?.params;
 
+  console.log(media)
   const [movieDetails, setmovieDetails] = useState([]);
+  const [recomendedShows, setrecomendedShows] = useState([]);
   const [crew, setCrew] = useState([]);
 
   // for movie details
+  const finalUrl = media == "movie" ?  `movie/${id}?language=en-US` : `tv/${id}?language=en-US`
   const getDetailsById = async () => {
     try {
       const res = await axios.get(
-        `${process.env.REACT_BASE_URL}movie/${id}?language=en-US`,
+        `${process.env.REACT_BASE_URL}${finalUrl}`,
         {
           headers: {
             accept: "application/json",
@@ -39,11 +43,31 @@ const MovieDetails = ({ route, navigation }) => {
     }
   };
 
+  const recomendedUrl = media == "movie" ? `movie/${id}/recommendations?language=en-US&page=1` : `tv/${id}/recommendations?language=en-US&page=1` 
+
+  const getRecomendedShows =  async()=>{
+    try {
+      const res = await axios.get(`${process.env.REACT_BASE_URL}${recomendedUrl}`, 
+        {
+          headers: {
+            accept: "application/json",
+            Authorization: `${process.env.REACT_ACCESS_TOKEN}`,
+          },
+        }
+      );
+      await setrecomendedShows(res?.data?.results)
+    } catch (error) {
+      
+    }
+  }
+
   // for cast and crew
+  const credsUrl = media == "movie" ? `movie/${id}/credits?language=en-US` : `tv/${id}/credits?language=en-US`
+  console.log(credsUrl)
   const getCrewDetails = async () => {
     try {
       const res = await axios.get(
-        `${process.env.REACT_BASE_URL}movie/${id}/credits?language=en-US`,
+        `${process.env.REACT_BASE_URL}${credsUrl}`,
         {
           headers: {
             accept: "application/json",
@@ -62,6 +86,7 @@ const MovieDetails = ({ route, navigation }) => {
     useCallback(() => {
       getDetailsById();
       getCrewDetails();
+      getRecomendedShows();
     }, [id])
   );
 
@@ -90,7 +115,7 @@ const MovieDetails = ({ route, navigation }) => {
                 width: "80%",
                 height: 400,
               }}
-              className="rounded-lg mt-2"
+              className="rounded-lg mt-1"
             />
           </BlurView>
           {/* voting average and release year */}
@@ -107,11 +132,11 @@ const MovieDetails = ({ route, navigation }) => {
 
           {/* genre and links */}
           <View className="flex justify-between flex-row items-center">
-            <View className="flex flex-row mx-5 justify-between">
+            <View className="flex flex-row mx-5 justify-between items-center">
               {movieDetails &&
                 movieDetails?.genres?.map((item) => (
                   <View>
-                    <Text className="text-lg text-[#28303d]">
+                    <Text className="text-md text-[#28303d]">
                       {item?.name} .
                     </Text>
                   </View>
@@ -152,7 +177,7 @@ const MovieDetails = ({ route, navigation }) => {
 
           {/* for cast & crew */}
           <View>
-            <Text className="text-xl font-bold mt-3 mx-5">Cast & Crew</Text>
+            <Text className="text-xl font-bold mt-3 mx-5 mb-3">Cast & Crew</Text>
             <View style={{ flexDirection: "row" }} className="mx-3">
             {console.log('Crew Length:', crew.length)}
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
@@ -175,7 +200,16 @@ const MovieDetails = ({ route, navigation }) => {
                 </ScrollView>
             </View>
           </View>
+
+          {/* Recomended shows */}
+          <View>
+            <Text className="mx-5 font-bold text-lg mb-3">People also like</Text>
+            <HorizontalMoviesData data={recomendedShows} navigation={navigation} media={media}/>
+          </View>
         </View>
+
+
+        
       </View>
     </ScrollView>
   );

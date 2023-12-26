@@ -105,13 +105,13 @@ const Trending = ({navigation}) => {
     <SafeAreaView className="bg-white flex-1">
       <ScrollView showsVerticalScrollIndicator={false}>
       <Text className="color-[#0D111f] text-lg mx-3 mb-2 mt-4">Trending Movies!</Text>
-      <HorizontalMoviesData data={popularMovies} navigation={navigation}/>
+      <HorizontalMoviesData data={popularMovies} navigation={navigation} media={"movie"}/>
       <Text className="color-[#0D111f] text-lg mx-3 mb-6 mt-2">Popular TV shows!</Text>
-      <HorizontalMoviesData data={trendingSeries} navigation={navigation}/>
+      <HorizontalMoviesData data={trendingSeries} navigation={navigation} media={"tv"}/>
       <Text className="color-[#0D111f] text-lg mx-3 mb-6 mt-2">Arriving This Week!</Text>
-      <HorizontalMoviesData data={arrivingSoon} navigation={navigation}/>
+      <HorizontalMoviesData data={arrivingSoon} navigation={navigation} media={"tv"}/>
       <Text className="color-[#0D111f] text-lg mx-3 mb-6 mt-2">Top Rated Tv Series!</Text>
-      <HorizontalMoviesData data={topRated} navigation={navigation}/>
+      <HorizontalMoviesData data={topRated} navigation={navigation} media={"tv"}/>
       </ScrollView>
     </SafeAreaView>
   );
