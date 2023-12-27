@@ -38,6 +38,7 @@ const MovieDetails = ({ route, navigation }) => {
         }
       );
       await setmovieDetails(res?.data);
+      console.log(res?.data)
     } catch (error) {
       console.log(error);
     }
@@ -119,23 +120,28 @@ const MovieDetails = ({ route, navigation }) => {
             />
           </BlurView>
           {/* voting average and release year */}
-          <View className="w-[150px] flex flex-row items-center gap-1 bg-[#222] mx-3 opacity-[0.8] relative bottom-[36px] left-[60px] rounded-sm">
+          <View className="relative">
+          <View className="w-[77%] flex flex-row items-center gap-1  bottom-[10px] left-[50px] rounded-lg absolute inset-0 bg-white opacity-80 filter blur-md justify-between font-semibold">
             <Ionicons name="md-star" size={20} color="gold" className="mt-2" />
-            <Text className="text-white">
+            <Text className="text-black text-lg">
               {Math.round(movieDetails?.vote_average * 10) / 10}
             </Text>
-            <Text className="text-white"> | </Text>
-            <Text className="text-white">
-              {movieDetails?.release_date?.slice(0, 4)}
+            <Text className="text-black"> | </Text>
+            <Text className="text-black text-lg">
+              {!movieDetails?.release_date?.slice(0, 4) ? movieDetails?.first_air_date?.slice(0, 4) : movieDetails?.release_date?.slice(0, 4)}
             </Text>
+            <Text className="text-black"> | </Text>
+            <Text className="text-black text-lg">{movieDetails?.origin_country}</Text>
+            <Text className="text-black"> | </Text>
+            <Text className="text-black text-lg mr-3">{movieDetails?.episode_run_time}</Text>
           </View>
-
+          </View>
           {/* genre and links */}
           <View className="flex justify-between flex-row items-center">
-            <View className="flex flex-row mx-5 justify-between items-center">
+            <View className="flex flex-row mx-5 justify-between flex-wrap">
               {movieDetails &&
                 movieDetails?.genres?.map((item) => (
-                  <View>
+                  <View className="gap-3 max-w-[80px]">
                     <Text className="text-md text-[#28303d]">
                       {item?.name} .
                     </Text>

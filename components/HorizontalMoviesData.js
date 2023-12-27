@@ -39,11 +39,13 @@ const HorizontalMoviesData = ({data, navigation, media}) => {
                     backgroundColor: 'rgba(255, 255, 255, 0.6)'
                 }}
                 >
+                  <View className="flex flex-row items-star justify-between">
                   <Text className="text-white mx-3 text-md mt-2">{item?.title ? item?.title.slice(0, 15) : item?.name.slice(0, 15)}</Text>
                   <Text className="bg-transparent text-white mt-2 text-md">
                     {Math.round(item?.vote_average*10)/10}
                   </Text>
-                  <Ionicons name="md-star" size={20} color="gold" className="mt-2"/>
+                  <Ionicons name="md-star" size={20} color="gold" style={{marginTop: 4, marginLeft: 6}}/>
+                  </View>
                 </View>
                 </View>
               </View>
