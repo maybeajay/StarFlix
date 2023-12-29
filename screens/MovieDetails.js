@@ -15,60 +15,45 @@ import { imageUrl } from "../constant";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { BlurView } from "expo-blur";
 import HorizontalMoviesData from "../components/HorizontalMoviesData";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import moment from "moment";
+import "moment-duration-format";
 
 const MovieDetails = ({ route, navigation }) => {
   const { id, media } = route?.params;
 
-  console.log(media)
+  console.log(media);
   const [movieDetails, setmovieDetails] = useState([]);
   const [recomendedShows, setrecomendedShows] = useState([]);
   const [crew, setCrew] = useState([]);
 
   // for movie details
-  const finalUrl = media == "movie" ?  `movie/${id}?language=en-US` : `tv/${id}?language=en-US`
+  const finalUrl =
+    media == "movie" ? `movie/${id}?language=en-US` : `tv/${id}?language=en-US`;
   const getDetailsById = async () => {
     try {
-      const res = await axios.get(
-        `${process.env.REACT_BASE_URL}${finalUrl}`,
-        {
-          headers: {
-            accept: "application/json",
-            Authorization: `${process.env.REACT_ACCESS_TOKEN}`,
-          },
-        }
-      );
+      const res = await axios.get(`${process.env.REACT_BASE_URL}${finalUrl}`, {
+        headers: {
+          accept: "application/json",
+          Authorization: `${process.env.REACT_ACCESS_TOKEN}`,
+        },
+      });
       await setmovieDetails(res?.data);
-      console.log(res?.data)
+      console.log(res?.data);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const recomendedUrl = media == "movie" ? `movie/${id}/recommendations?language=en-US&page=1` : `tv/${id}/recommendations?language=en-US&page=1` 
+  const recomendedUrl =
+    media == "movie"
+      ? `movie/${id}/recommendations?language=en-US&page=1`
+      : `tv/${id}/recommendations?language=en-US&page=1`;
 
-  const getRecomendedShows =  async()=>{
-    try {
-      const res = await axios.get(`${process.env.REACT_BASE_URL}${recomendedUrl}`, 
-        {
-          headers: {
-            accept: "application/json",
-            Authorization: `${process.env.REACT_ACCESS_TOKEN}`,
-          },
-        }
-      );
-      await setrecomendedShows(res?.data?.results)
-    } catch (error) {
-      
-    }
-  }
-
-  // for cast and crew
-  const credsUrl = media == "movie" ? `movie/${id}/credits?language=en-US` : `tv/${id}/credits?language=en-US`
-  console.log(credsUrl)
-  const getCrewDetails = async () => {
+  const getRecomendedShows = async () => {
     try {
       const res = await axios.get(
-        `${process.env.REACT_BASE_URL}${credsUrl}`,
+        `${process.env.REACT_BASE_URL}${recomendedUrl}`,
         {
           headers: {
             accept: "application/json",
@@ -76,6 +61,24 @@ const MovieDetails = ({ route, navigation }) => {
           },
         }
       );
+      await setrecomendedShows(res?.data?.results);
+    } catch (error) {}
+  };
+
+  // for cast and crew
+  const credsUrl =
+    media == "movie"
+      ? `movie/${id}/credits?language=en-US`
+      : `tv/${id}/credits?language=en-US`;
+  console.log(credsUrl);
+  const getCrewDetails = async () => {
+    try {
+      const res = await axios.get(`${process.env.REACT_BASE_URL}${credsUrl}`, {
+        headers: {
+          accept: "application/json",
+          Authorization: `${process.env.REACT_ACCESS_TOKEN}`,
+        },
+      });
       await setCrew(res?.data?.cast);
       console.log("crew", crew);
     } catch (error) {
@@ -121,23 +124,39 @@ const MovieDetails = ({ route, navigation }) => {
           </BlurView>
           {/* voting average and release year */}
           <View className="relative">
-          <View className="w-[77%] flex flex-row items-center gap-1  bottom-[10px] left-[50px] rounded-lg absolute inset-0 bg-white opacity-80 filter blur-md justify-between font-semibold">
-            <Ionicons name="md-star" size={20} color="gold" className="mt-2" />
-            <Text className="text-black text-lg">
-              {Math.round(movieDetails?.vote_average * 10) / 10}
-            </Text>
-            <Text className="text-black"> | </Text>
-            <Text className="text-black text-lg">
-              {!movieDetails?.release_date?.slice(0, 4) ? movieDetails?.first_air_date?.slice(0, 4) : movieDetails?.release_date?.slice(0, 4)}
-            </Text>
-            <Text className="text-black"> | </Text>
-            <Text className="text-black text-lg">{movieDetails?.origin_country}</Text>
-            <Text className="text-black"> | </Text>
-            <Text className="text-black text-lg mr-3">{movieDetails?.episode_run_time}</Text>
+            <View className="w-[77%] flex flex-row items-center gap-1  bottom-[10px] left-[50px] rounded-lg absolute inset-0 bg-white opacity-80 filter blur-md justify-around font-semibold">
+              <Ionicons
+                name="md-star"
+                size={20}
+                color="gold"
+                className="mt-2"
+              />
+              <Text className="text-black text-lg">
+                {Math.round(movieDetails?.vote_average * 10) / 10}
+              </Text>
+              <Text className="text-black"> | </Text>
+              <Text className="text-black text-lg">
+                {!movieDetails?.release_date?.slice(0, 4)
+                  ? movieDetails?.first_air_date?.slice(0, 4)
+                  : movieDetails?.release_date?.slice(0, 4)}
+              </Text>
+              <Text className="text-black"> | </Text>
+              <Text className="text-black text-lg">
+                {movieDetails?.origin_country}
+              </Text>
+
+              <Text className="text-black text-lg mr-3">
+                {movieDetails?.runtime
+                  ? moment
+                      .duration(Number(movieDetails?.runtime), "minutes")
+                      .format("h:mm", { trim: false })
+                  : movieDetails?.episode_run_time}
+              </Text>
+            </View>
           </View>
-          </View>
+
           {/* genre and links */}
-          <View className="flex justify-between flex-row items-center">
+          <View className="flex justify-between flex-row items-center mt-3">
             <View className="flex flex-row mx-5 justify-between flex-wrap">
               {movieDetails &&
                 movieDetails?.genres?.map((item) => (
@@ -160,6 +179,11 @@ const MovieDetails = ({ route, navigation }) => {
             </Pressable>
           </View>
 
+
+          <Pressable onPress={()=>navigation.navigate("Video Player", {id: movieDetails?.id, media: media})}>
+            <Text>Watch</Text>
+          </Pressable>
+
           {/* Movie title and overview */}
           <View className="mt-3 mx-5">
             <Text
@@ -169,7 +193,7 @@ const MovieDetails = ({ route, navigation }) => {
                 fontSize: 23,
               }}
             >
-              {movieDetails?.title}
+              {!movieDetails?.name ? movieDetails?.title : movieDetails?.name}
             </Text>
             <Text
               className="mt-3 font-semibold"
@@ -182,40 +206,65 @@ const MovieDetails = ({ route, navigation }) => {
           </View>
 
           {/* for cast & crew */}
-          <View>
-            <Text className="text-xl font-bold mt-3 mx-5 mb-3">Cast & Crew</Text>
+          <View className="mx-5 mt-5">
+            <Text className="text-xl font-bold mt-3 mb-3">
+              Cast & Crew
+            </Text>
             <View style={{ flexDirection: "row" }} className="mx-3">
-            {console.log('Crew Length:', crew.length)}
-                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                  {crew.length > 0 && crew.map((item) => (
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+              >
+                {crew.length > 0 &&
+                  crew.map((item) => (
                     <View
                       key={item.id}
-                      style={{ margin: 5, alignItems: "center",  }}
-                    className="text-center"
+                      style={{ margin: 5, alignItems: "center" }}
+                      className="text-center"
                     >
-                      <Image
-                        source={{ uri: `${imageUrl}${item?.profile_path}` }}
-                        style={{ width: 80, height: 80, borderRadius: 40, resizeMode: "contain" }}
-                      />
-                      <Text style={{
-                        maxWidth: 60,
-                        marginTop: 8
-                      }}>{item?.original_name}</Text>
+                      <TouchableWithoutFeedback
+                        onPress={() =>
+                          navigation.navigate("People Details", {
+                            id: item?.id,
+                          })
+                        }
+                      >
+                        <Image
+                          source={{ uri: `${imageUrl}${item?.profile_path}` }}
+                          style={{
+                            width: 80,
+                            height: 80,
+                            borderRadius: 40,
+                            resizeMode: "contain",
+                          }}
+                        />
+                        <Text
+                          style={{
+                            maxWidth: 60,
+                            marginTop: 8,
+                          }}
+                        >
+                          {item?.original_name}
+                        </Text>
+                      </TouchableWithoutFeedback>
                     </View>
                   ))}
-                </ScrollView>
+              </ScrollView>
             </View>
           </View>
 
           {/* Recomended shows */}
-          <View>
-            <Text className="mx-5 font-bold text-lg mb-3">People also like</Text>
-            <HorizontalMoviesData data={recomendedShows} navigation={navigation} media={media}/>
+          <View className="mt-5">
+            <Text className="mx-5 font-bold text-lg mb-3">
+              People also like
+            </Text>
+            <HorizontalMoviesData
+              data={recomendedShows}
+              navigation={navigation}
+              media={media}
+            />
           </View>
         </View>
-
-
-        
       </View>
     </ScrollView>
   );

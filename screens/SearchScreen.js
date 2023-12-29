@@ -119,7 +119,7 @@ const SearchScreen = () => {
              </View> : ""}
           </View>
         </View>
-        <View className="flex flex-col p-5">
+        <View className="flex flex-col p-5 items-center">
           <FlatList
             data={searchMovies}
             renderItem={({ item }) => (
@@ -142,13 +142,14 @@ const SearchScreen = () => {
                 <Text className="absolute left-[150px] bottom-20  w-[25px] text-center text-white opacity-[0.9] bg-[#28303D]">
                   {Math.round(item?.vote_average * 10) / 10}
                 </Text>
-                <View className="flex flex-col mx-5 justify-center items-start">
+                <View className="flex flex-col mx-5 justify-center items-start mt-5 p-1">
                   <Text
-                    className="text-md"
+                    className="text-md font-bold"
                     style={{
                       fontSize: 13,
                       maxWidth: "70%",
                       minWidth: "30%",
+                      fontSize: 18
                     }}
                   >
                     {item?.title}
