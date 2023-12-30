@@ -1,3 +1,4 @@
+// project imports
 import {
   SafeAreaView,
   Text,
@@ -7,7 +8,7 @@ import {
   FlatList,
   Image,
   Pressable,
-  TouchableOpacity,
+  TouchableOpacity
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { Search } from "lucide-react-native";
@@ -16,11 +17,11 @@ import axios from "axios";
 import { imageUrl } from "../constant";
 
 
-// added dependencies
+// added imports
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 
-const SearchScreen = () => {
+const SearchScreen = ({navigation}) => {
   const [query, setQuery] = useState("");
   const [searchMovies, setsearchMovies] = useState([]);
   const [genres, setGenres] = useState([]);
@@ -59,6 +60,13 @@ const SearchScreen = () => {
       await setGenres(res?.data?.genres);
     } catch (error) {}
   };
+
+
+  // handling navigating to details page
+
+  const handleDetailPageNavigation = (id)=>{
+    navigation.navigate("Movie Details", {id: id, media: "movie" | "tv"});
+  }
 
   // get label from id
   const getGenreLabelFromId = async (idArray)=>{
@@ -123,6 +131,9 @@ const SearchScreen = () => {
           <FlatList
             data={searchMovies}
             renderItem={({ item }) => (
+              <TouchableOpacity
+              onPress={()=>handleDetailPageNavigation(item?.id)}
+              >
               <View className="flex flex-row items-center">
                 <Image
                   alt="movie-img"
@@ -173,6 +184,7 @@ const SearchScreen = () => {
                 </View>
                 </View>
               </View>
+              </TouchableOpacity>
             )}
           />
         </View>

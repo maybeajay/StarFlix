@@ -18,6 +18,7 @@ import HorizontalMoviesData from "../components/HorizontalMoviesData";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import moment from "moment";
 import "moment-duration-format";
+import { Clapperboard, Play } from "lucide-react-native";
 
 const MovieDetails = ({ route, navigation }) => {
   const { id, media } = route?.params;
@@ -155,34 +156,61 @@ const MovieDetails = ({ route, navigation }) => {
             </View>
           </View>
 
+          {/* watch trailer */}
+
+          <View className="mt-5 flex items-center w-full flex-row h-[50px] mx-5">
+            <View className="w-[45%]">
+              <Pressable
+                onPress={() =>
+                  navigation.navigate("Video Player", {
+                    id: movieDetails?.id,
+                    media: media,
+                  })
+                }
+                className="flex flex-row items-center bg-[#6936f5] p-3 h-full"
+                style={{
+                  borderBottomLeftRadius: 40,
+                  borderTopLeftRadius: 40
+                }}
+              >
+                <Clapperboard size={30} color="white" />
+                <Text className="text-white font-semibold mx-2 text-lg">Watch Trailer</Text>
+              </Pressable>
+            </View>
+
+            <View className="w-[45%]" 
+            >
+              <Pressable
+                onPress={() => handleHomePageNavigation()}
+                className="h-full bg-white flex flex-row justify-center p-3 items-center"
+                style={{
+                  borderBottomRightRadius: 40,
+                  borderTopRightRadius: 40
+                }}
+              >
+                <Play size={30} color="#6936f5" className="relative"/>
+                <Text className="text-[#6936f5] font-semibold mx-2 text-md">Watch </Text>
+                {
+                  media == 'tv' ? <Text className="font-semibold mx-2 text-md">on {movieDetails?.networks?.[0].name}</Text> : null 
+                }
+              </Pressable>
+            </View>
+          </View>
+
           {/* genre and links */}
-          <View className="flex justify-between flex-row items-center mt-3">
-            <View className="flex flex-row mx-5 justify-between flex-wrap">
+          <View className="flex justify-start flex-row items-center mt-3">
+            <View className="flex flex-row mx-5 justify-around flex-wrap">
               {movieDetails &&
                 movieDetails?.genres?.map((item) => (
-                  <View className="gap-3 max-w-[80px]">
+                  <View>
                     <Text className="text-md text-[#28303d]">
                       {item?.name} .
                     </Text>
                   </View>
                 ))}
+                {media == "tv" ? <Text>{movieDetails?.seasons?.length} Seasons</Text> : null}
             </View>
-            <Pressable
-              onPress={() => handleHomePageNavigation()}
-              className="h-[35px] w-[90px] bg-[#6936f5] flex flex-row items-center mr-3 justify-center"
-              style={{
-                borderRadius: 20,
-              }}
-            >
-              <Ionicons name="md-play" size={20} color="white" />
-              <Text className="text-white ">Watch</Text>
-            </Pressable>
           </View>
-
-
-          <Pressable onPress={()=>navigation.navigate("Video Player", {id: movieDetails?.id, media: media})}>
-            <Text>Watch</Text>
-          </Pressable>
 
           {/* Movie title and overview */}
           <View className="mt-3 mx-5">
@@ -207,10 +235,8 @@ const MovieDetails = ({ route, navigation }) => {
 
           {/* for cast & crew */}
           <View className="mx-5 mt-5">
-            <Text className="text-xl font-bold mt-3 mb-3">
-              Cast & Crew
-            </Text>
-            <View style={{ flexDirection: "row" }} className="mx-3">
+            <Text className="text-xl font-bold mt-3 mb-3">Cast & Crew</Text>
+            <View style={{ flexDirection: "row" }} className="">
               <ScrollView
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
@@ -220,7 +246,6 @@ const MovieDetails = ({ route, navigation }) => {
                     <View
                       key={item.id}
                       style={{ margin: 5, alignItems: "center" }}
-                      className="text-center"
                     >
                       <TouchableWithoutFeedback
                         onPress={() =>
@@ -242,6 +267,8 @@ const MovieDetails = ({ route, navigation }) => {
                           style={{
                             maxWidth: 60,
                             marginTop: 8,
+                            textAlign: "center",
+                            marginLeft: 10,
                           }}
                         >
                           {item?.original_name}
