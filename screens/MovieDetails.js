@@ -1,6 +1,6 @@
 import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,9 @@ import {
   Linking,
   Pressable,
 } from "react-native";
+import { Context } from "../App";
+
+
 
 // added dependecies
 import { imageUrl } from "../constant";
@@ -19,20 +22,26 @@ import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import moment from "moment";
 import "moment-duration-format";
 import { Clapperboard, Play } from "lucide-react-native";
+import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder'
+import { LinearGradient } from 'expo-linear-gradient';
 
 const MovieDetails = ({ route, navigation }) => {
   const { id, media } = route?.params;
-
-  console.log(media);
   const [movieDetails, setmovieDetails] = useState([]);
   const [recomendedShows, setrecomendedShows] = useState([]);
   const [crew, setCrew] = useState([]);
+
+  
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient)
+
+  const {loading, setLoading} = useContext(Context);
 
   // for movie details
   const finalUrl =
     media == "movie" ? `movie/${id}?language=en-US` : `tv/${id}?language=en-US`;
   const getDetailsById = async () => {
     try {
+      setLoading(true);
       const res = await axios.get(`${process.env.REACT_BASE_URL}${finalUrl}`, {
         headers: {
           accept: "application/json",
@@ -40,8 +49,10 @@ const MovieDetails = ({ route, navigation }) => {
         },
       });
       await setmovieDetails(res?.data);
+      setLoading(false);
       console.log(res?.data);
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   };
@@ -53,6 +64,7 @@ const MovieDetails = ({ route, navigation }) => {
 
   const getRecomendedShows = async () => {
     try {
+      setLoading(true);
       const res = await axios.get(
         `${process.env.REACT_BASE_URL}${recomendedUrl}`,
         {
@@ -63,7 +75,10 @@ const MovieDetails = ({ route, navigation }) => {
         }
       );
       await setrecomendedShows(res?.data?.results);
-    } catch (error) {}
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   // for cast and crew
@@ -74,6 +89,7 @@ const MovieDetails = ({ route, navigation }) => {
   console.log(credsUrl);
   const getCrewDetails = async () => {
     try {
+      setLoading(true);
       const res = await axios.get(`${process.env.REACT_BASE_URL}${credsUrl}`, {
         headers: {
           accept: "application/json",
@@ -81,8 +97,10 @@ const MovieDetails = ({ route, navigation }) => {
         },
       });
       await setCrew(res?.data?.cast);
+      setLoading(false);
       console.log("crew", crew);
     } catch (error) {
+      setLoading(fasle);
       console.log(error);
     }
   };
@@ -190,16 +208,13 @@ const MovieDetails = ({ route, navigation }) => {
               >
                 <Play size={30} color="#6936f5" className="relative"/>
                 <Text className="text-[#6936f5] font-semibold mx-2 text-md">Watch </Text>
-                {
-                  media == 'tv' ? <Text className="font-semibold mx-2 text-md">on {movieDetails?.networks?.[0].name}</Text> : null 
-                }
               </Pressable>
             </View>
           </View>
 
           {/* genre and links */}
-          <View className="flex justify-start flex-row items-center mt-3">
-            <View className="flex flex-row mx-5 justify-around flex-wrap">
+          <View className="flex justify-start flex-row items-center mt-5">
+            <View className="flex flex-row mx-5 justify-start flex-wrap space-x-2">
               {movieDetails &&
                 movieDetails?.genres?.map((item) => (
                   <View>
@@ -208,12 +223,12 @@ const MovieDetails = ({ route, navigation }) => {
                     </Text>
                   </View>
                 ))}
-                {media == "tv" ? <Text>{movieDetails?.seasons?.length} Seasons</Text> : null}
             </View>
+            {media == "tv" ? <View className="mx-auto"><Text>{movieDetails?.seasons?.length} Seasons</Text></View>: null}
           </View>
 
           {/* Movie title and overview */}
-          <View className="mt-3 mx-5">
+          <View className="mt-5 mx-5">
             <Text
               className="font-bold"
               style={{
@@ -279,6 +294,22 @@ const MovieDetails = ({ route, navigation }) => {
               </ScrollView>
             </View>
           </View>
+
+          {/* available on */}
+          {media == 'tv' ? <View className="mx-5 mt-5">
+            <Text className="font-bold text-lg text-[#6936f5]">Available on</Text>
+            {
+              movieDetails?.networks?.map((item)=><View className="flex flex-row mt-2 p-2">
+                <Image source={{uri: `${imageUrl}${item?.logo_path}`}} 
+                style={{
+                  width: 60,
+                  height: 60,
+                  resizeMode: "contain"
+                }}
+                />
+              </View>)
+            }
+          </View> : null}
 
           {/* Recomended shows */}
           <View className="mt-5">

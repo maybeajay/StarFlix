@@ -6,8 +6,6 @@ import { View, Dimensions, Button } from "react-native";
 // added dependencies
 import YoutubePlayer from "react-native-youtube-iframe"
 
-
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 const VideoPlayer = ({ route }) => {
   const { id, media } = route?.params;
 

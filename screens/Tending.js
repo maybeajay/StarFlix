@@ -11,7 +11,7 @@ import { useContext } from "react";
 import axios from "axios";
 import { Context } from "../App";
 import HorizontalMoviesData from "../components/HorizontalMoviesData";
-
+import PlaceHolder from "../components/PlaceHolder";
 console.log("+++++", process.env.REACT_BASE_URL);
 
 const Trending = ({navigation}) => {
