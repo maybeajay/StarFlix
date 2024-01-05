@@ -53,9 +53,10 @@ const Wrapper = ({show, text})=>{
         }}
         />
         {/* for name and stuff */}
-        <SafeAreaView className="text-center">
-            <Text className="text-xl font-bold text-center">{peopleDetails?.name}</Text>
+        <SafeAreaView className="">
+            <Text className="text-4xl font-bold relative bottom-[80] left-8 text-white max-w-[90]">{peopleDetails?.name}</Text>
             {/* wrap inside hide show */}
+            <Text className="mx-5 text-xl">Biography</Text>
             <View className="flex flex-row flex-wrap">
             <Text className="text-md font-semibold text-center  mx-auto mt-5 max-w-[80%]">{peopleDetails?.biography}</Text>
             </View>

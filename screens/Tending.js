@@ -11,7 +11,8 @@ import { useContext } from "react";
 import axios from "axios";
 import { Context } from "../App";
 import HorizontalMoviesData from "../components/HorizontalMoviesData";
-import PlaceHolder from "../components/PlaceHolder";
+
+
 console.log("+++++", process.env.REACT_BASE_URL);
 
 const Trending = ({navigation}) => {
@@ -20,11 +21,11 @@ const Trending = ({navigation}) => {
   const [arrivingSoon, setarrivingSoon]=useState([]);
   const [topRated, settopRated]=useState([]);
   const { loading, setLoading } = useContext(Context);
-  console.log(loading);
 
   // for popular movies
   const getPopularMovies = async () => {
     try {
+      setLoading(false);
       const res = await axios.get(`${process.env.REACT_BASE_URL}trending/movie/day?language=en-US`, {
         headers:{
           accept: "application/json",
@@ -32,7 +33,9 @@ const Trending = ({navigation}) => {
         }
       });
       await setPopularMovies(res?.data?.results);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.log(error)
     }
   };
@@ -69,6 +72,7 @@ const Trending = ({navigation}) => {
         }
       })
       await setarrivingSoon(res?.data?.results);
+      setLoading(false);
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -81,6 +85,7 @@ const Trending = ({navigation}) => {
   // top rated
   const getTopRated  = async()=>{
     try {
+      setLoading(true);
       const res = await axios.get(`${process.env.REACT_BASE_URL}tv/top_rated?language=en-US&page=1`, {
         headers:{
           accept: "application/json",
@@ -88,7 +93,9 @@ const Trending = ({navigation}) => {
         }
       })
       await settopRated(res?.data?.results);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.log(error)
     }
   }

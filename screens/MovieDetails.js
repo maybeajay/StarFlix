@@ -11,8 +11,6 @@ import {
 } from "react-native";
 import { Context } from "../App";
 
-
-
 // added dependecies
 import { imageUrl } from "../constant";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -22,19 +20,25 @@ import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import moment from "moment";
 import "moment-duration-format";
 import { Clapperboard, Play } from "lucide-react-native";
-import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder'
-import { LinearGradient } from 'expo-linear-gradient';
+import { Skeleton } from "moti/skeleton";
+import UserReviews from '../components/UserReviews'
 
 const MovieDetails = ({ route, navigation }) => {
   const { id, media } = route?.params;
   const [movieDetails, setmovieDetails] = useState([]);
   const [recomendedShows, setrecomendedShows] = useState([]);
+  const [userReviews, setuserReviews] = useState([]);
   const [crew, setCrew] = useState([]);
 
-  
-const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient)
+  const { loading, setLoading } = useContext(Context);
 
-  const {loading, setLoading} = useContext(Context);
+  // headers 
+  const Headers = {
+    headers: {
+      accept: "application/json",
+      Authorization: `${process.env.REACT_ACCESS_TOKEN}`,
+    },
+  }
 
   // for movie details
   const finalUrl =
@@ -42,12 +46,7 @@ const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient)
   const getDetailsById = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${process.env.REACT_BASE_URL}${finalUrl}`, {
-        headers: {
-          accept: "application/json",
-          Authorization: `${process.env.REACT_ACCESS_TOKEN}`,
-        },
-      });
+      const res = await axios.get(`${process.env.REACT_BASE_URL}${finalUrl}`, Headers);
       await setmovieDetails(res?.data);
       setLoading(false);
       console.log(res?.data);
@@ -81,6 +80,19 @@ const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient)
     }
   };
 
+  // for revies
+  const reviewUrl = media == "movie" ? `movie/${id}/reviews?language=en-US&page=1` : `tv/${id}/reviews?language=en-US&page=1`
+  console.log(reviewUrl);
+  const getuserReviews = async()=>{
+    try {
+      const res = await axios.get(`${process.env.REACT_BASE_URL}${reviewUrl}`, Headers);
+      await setuserReviews(res?.data?.results)
+      console.log("RRRRR",res?.data?.results);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   // for cast and crew
   const credsUrl =
     media == "movie"
@@ -110,6 +122,8 @@ const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient)
       getDetailsById();
       getCrewDetails();
       getRecomendedShows();
+      getuserReviews();
+      console.log("+++++++", userReviews)
     }, [id])
   );
 
@@ -121,7 +135,9 @@ const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient)
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View>
+        <Skeleton.Group show={loading} colorMode={"light"}>
         <View className="mt-[30px] rounded-lg">
+        <Skeleton>
           <BlurView
             intensity={80}
             tint="light"
@@ -131,17 +147,21 @@ const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient)
               padding: 10,
             }}
           >
-            <Image
-              source={{ uri: `${imageUrl}${movieDetails?.poster_path}` }}
-              style={{
-                resizeMode: "contain",
-                width: "80%",
-                height: 400,
-              }}
-              className="rounded-lg mt-1"
-            />
+            <View>
+             <Image
+                  source={{ uri: `${imageUrl}${movieDetails.poster_path}` }}
+                  style={{
+                    resizeMode: "contain",
+                    width: "80%",
+                    height: 400,
+                  }}
+                  className="rounded-lg mt-1"
+                />
+              </View>
           </BlurView>
+          </Skeleton>
           {/* voting average and release year */}
+          <Skeleton>
           <View className="relative">
             <View className="w-[77%] flex flex-row items-center gap-1  bottom-[10px] left-[50px] rounded-lg absolute inset-0 bg-white opacity-80 filter blur-md justify-around font-semibold">
               <Ionicons
@@ -173,9 +193,10 @@ const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient)
               </Text>
             </View>
           </View>
+          </Skeleton>
 
           {/* watch trailer */}
-
+          <Skeleton>
           <View className="mt-5 flex items-center w-full flex-row h-[50px] mx-5">
             <View className="w-[45%]">
               <Pressable
@@ -188,29 +209,33 @@ const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient)
                 className="flex flex-row items-center bg-[#6936f5] p-3 h-full"
                 style={{
                   borderBottomLeftRadius: 40,
-                  borderTopLeftRadius: 40
+                  borderTopLeftRadius: 40,
                 }}
               >
                 <Clapperboard size={30} color="white" />
-                <Text className="text-white font-semibold mx-2 text-lg">Watch Trailer</Text>
+                <Text className="text-white font-semibold mx-2 text-lg">
+                  Watch Trailer
+                </Text>
               </Pressable>
             </View>
 
-            <View className="w-[45%]" 
-            >
+            <View className="w-[45%]">
               <Pressable
                 onPress={() => handleHomePageNavigation()}
                 className="h-full bg-white flex flex-row justify-center p-3 items-center"
                 style={{
                   borderBottomRightRadius: 40,
-                  borderTopRightRadius: 40
+                  borderTopRightRadius: 40,
                 }}
               >
-                <Play size={30} color="#6936f5" className="relative"/>
-                <Text className="text-[#6936f5] font-semibold mx-2 text-md">Watch </Text>
+                <Play size={30} color="#6936f5" className="relative" />
+                <Text className="text-[#6936f5] font-semibold mx-2 text-md">
+                  Watch{" "}
+                </Text>
               </Pressable>
             </View>
           </View>
+          </Skeleton>
 
           {/* genre and links */}
           <View className="flex justify-start flex-row items-center mt-5">
@@ -224,7 +249,11 @@ const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient)
                   </View>
                 ))}
             </View>
-            {media == "tv" ? <View className="mx-auto"><Text>{movieDetails?.seasons?.length} Seasons</Text></View>: null}
+            {media == "tv" ? (
+              <View className="mx-auto">
+                <Text>{movieDetails?.seasons?.length} Seasons</Text>
+              </View>
+            ) : null}
           </View>
 
           {/* Movie title and overview */}
@@ -296,23 +325,35 @@ const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient)
           </View>
 
           {/* available on */}
-          {media == 'tv' ? <View className="mx-5 mt-5">
-            <Text className="font-bold text-lg text-[#6936f5]">Available on</Text>
-            {
-              movieDetails?.networks?.map((item)=><View className="flex flex-row mt-2 p-2">
-                <Image source={{uri: `${imageUrl}${item?.logo_path}`}} 
-                style={{
-                  width: 60,
-                  height: 60,
-                  resizeMode: "contain"
-                }}
-                />
-              </View>)
-            }
-          </View> : null}
+          {media == "tv" ? (
+            <View className="mx-5 mt-5">
+              <Text className="font-bold text-lg text-[#6936f5]">
+                Available on
+              </Text>
+              <View className="flex flex-row gap-5">
+                {movieDetails?.networks?.map((item) => (
+                  <View className="flex flex-row mt-2 p-2">
+                    <Image
+                      source={{ uri: `${imageUrl}${item?.logo_path}` }}
+                      style={{
+                        width: 60,
+                        height: 60,
+                        resizeMode: "contain",
+                      }}
+                    />
+                  </View>
+                ))}
+              </View>
+            </View>
+          ) : null}
 
+          {/* Reviews section */}
+          <View className="mt-8">
+            <Text className="mx-5 font-bold text-xl">Reviews</Text>
+          <UserReviews data={userReviews}/>
+          </View>
           {/* Recomended shows */}
-          <View className="mt-5">
+          <View className="mt-8">
             <Text className="mx-5 font-bold text-lg mb-3">
               People also like
             </Text>
@@ -323,6 +364,7 @@ const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient)
             />
           </View>
         </View>
+        </Skeleton.Group>
       </View>
     </ScrollView>
   );

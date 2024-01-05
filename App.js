@@ -18,6 +18,8 @@ import MovieDetails from "./screens/MovieDetails";
 import CastDetailsScreen from "./screens/CastDetailsScreen";
 import VideoPlayer from "./components/VideoPlayer";
 import PlaceHolder from "./components/PlaceHolder";
+import 'react-native-reanimated'
+import 'react-native-gesture-handler'
 // screens navigator
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
