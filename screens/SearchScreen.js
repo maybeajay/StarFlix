@@ -1,3 +1,4 @@
+// project imports
 import {
   SafeAreaView,
   Text,
@@ -7,7 +8,7 @@ import {
   FlatList,
   Image,
   Pressable,
-  TouchableOpacity,
+  TouchableOpacity
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { Search } from "lucide-react-native";
@@ -16,11 +17,11 @@ import axios from "axios";
 import { imageUrl } from "../constant";
 
 
-// added dependencies
+// added imports
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 
-const SearchScreen = () => {
+const SearchScreen = ({navigation}) => {
   const [query, setQuery] = useState("");
   const [searchMovies, setsearchMovies] = useState([]);
   const [genres, setGenres] = useState([]);
@@ -59,6 +60,13 @@ const SearchScreen = () => {
       await setGenres(res?.data?.genres);
     } catch (error) {}
   };
+
+
+  // handling navigating to details page
+
+  const handleDetailPageNavigation = (id)=>{
+    navigation.navigate("Movie Details", {id: id, media: "movie" | "tv"});
+  }
 
   // get label from id
   const getGenreLabelFromId = async (idArray)=>{
@@ -119,10 +127,13 @@ const SearchScreen = () => {
              </View> : ""}
           </View>
         </View>
-        <View className="flex flex-col p-5">
+        <View className="flex flex-col p-5 items-center">
           <FlatList
             data={searchMovies}
             renderItem={({ item }) => (
+              <TouchableOpacity
+              onPress={()=>handleDetailPageNavigation(item?.id)}
+              >
               <View className="flex flex-row items-center">
                 <Image
                   alt="movie-img"
@@ -142,13 +153,14 @@ const SearchScreen = () => {
                 <Text className="absolute left-[150px] bottom-20  w-[25px] text-center text-white opacity-[0.9] bg-[#28303D]">
                   {Math.round(item?.vote_average * 10) / 10}
                 </Text>
-                <View className="flex flex-col mx-5 justify-center items-start">
+                <View className="flex flex-col mx-5 justify-center items-start mt-5 p-1">
                   <Text
-                    className="text-md"
+                    className="text-md font-bold"
                     style={{
                       fontSize: 13,
                       maxWidth: "70%",
                       minWidth: "30%",
+                      fontSize: 18
                     }}
                   >
                     {item?.title}
@@ -172,6 +184,7 @@ const SearchScreen = () => {
                 </View>
                 </View>
               </View>
+              </TouchableOpacity>
             )}
           />
         </View>

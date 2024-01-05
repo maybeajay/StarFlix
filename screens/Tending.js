@@ -12,6 +12,7 @@ import axios from "axios";
 import { Context } from "../App";
 import HorizontalMoviesData from "../components/HorizontalMoviesData";
 
+
 console.log("+++++", process.env.REACT_BASE_URL);
 
 const Trending = ({navigation}) => {
@@ -20,11 +21,11 @@ const Trending = ({navigation}) => {
   const [arrivingSoon, setarrivingSoon]=useState([]);
   const [topRated, settopRated]=useState([]);
   const { loading, setLoading } = useContext(Context);
-  console.log(loading);
 
   // for popular movies
   const getPopularMovies = async () => {
     try {
+      setLoading(false);
       const res = await axios.get(`${process.env.REACT_BASE_URL}trending/movie/day?language=en-US`, {
         headers:{
           accept: "application/json",
@@ -32,7 +33,9 @@ const Trending = ({navigation}) => {
         }
       });
       await setPopularMovies(res?.data?.results);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.log(error)
     }
   };
@@ -69,6 +72,7 @@ const Trending = ({navigation}) => {
         }
       })
       await setarrivingSoon(res?.data?.results);
+      setLoading(false);
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -81,6 +85,7 @@ const Trending = ({navigation}) => {
   // top rated
   const getTopRated  = async()=>{
     try {
+      setLoading(true);
       const res = await axios.get(`${process.env.REACT_BASE_URL}tv/top_rated?language=en-US&page=1`, {
         headers:{
           accept: "application/json",
@@ -88,7 +93,9 @@ const Trending = ({navigation}) => {
         }
       })
       await settopRated(res?.data?.results);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.log(error)
     }
   }
@@ -105,13 +112,13 @@ const Trending = ({navigation}) => {
     <SafeAreaView className="bg-white flex-1">
       <ScrollView showsVerticalScrollIndicator={false}>
       <Text className="color-[#0D111f] text-lg mx-3 mb-2 mt-4">Trending Movies!</Text>
-      <HorizontalMoviesData data={popularMovies} navigation={navigation}/>
+      <HorizontalMoviesData data={popularMovies} navigation={navigation} media={"movie"}/>
       <Text className="color-[#0D111f] text-lg mx-3 mb-6 mt-2">Popular TV shows!</Text>
-      <HorizontalMoviesData data={trendingSeries} navigation={navigation}/>
+      <HorizontalMoviesData data={trendingSeries} navigation={navigation} media={"tv"}/>
       <Text className="color-[#0D111f] text-lg mx-3 mb-6 mt-2">Arriving This Week!</Text>
-      <HorizontalMoviesData data={arrivingSoon} navigation={navigation}/>
+      <HorizontalMoviesData data={arrivingSoon} navigation={navigation} media={"tv"}/>
       <Text className="color-[#0D111f] text-lg mx-3 mb-6 mt-2">Top Rated Tv Series!</Text>
-      <HorizontalMoviesData data={topRated} navigation={navigation}/>
+      <HorizontalMoviesData data={topRated} navigation={navigation} media={"tv"}/>
       </ScrollView>
     </SafeAreaView>
   );

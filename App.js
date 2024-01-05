@@ -15,6 +15,11 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Flame } from "lucide-react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import MovieDetails from "./screens/MovieDetails";
+import CastDetailsScreen from "./screens/CastDetailsScreen";
+import VideoPlayer from "./components/VideoPlayer";
+import PlaceHolder from "./components/PlaceHolder";
+import 'react-native-reanimated'
+import 'react-native-gesture-handler'
 // screens navigator
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -77,18 +82,21 @@ const BottomNavigator = ()=>{
 export default function App() {
   const [loading, setLoading]=useState(false);
   return (
-    <Context.Provider
+    <NavigationContainer>
+          <Context.Provider
     value={{loading, setLoading}}
     >
-    <NavigationContainer>
       <Stack.Navigator screenOptions={{
         headerShown: false
       }}>
       <Stack.Screen name="HomeScreen" component={BottomNavigator}/>
       <Stack.Screen name="Movie Details" component={MovieDetails}/>
+      <Stack.Screen name="People Details" component={CastDetailsScreen} />
+      <Stack.Screen name="Video Player" component={VideoPlayer} />
+      <Stack.Screen name="PlaceHolder" component={PlaceHolder} />
       </Stack.Navigator>
+          </Context.Provider>
     </NavigationContainer>
-    </Context.Provider>
   );
 }
 

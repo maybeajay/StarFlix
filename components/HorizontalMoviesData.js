@@ -7,7 +7,7 @@ import { imageUrl } from '../constant';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 
-const HorizontalMoviesData = ({data, navigation}) => {
+const HorizontalMoviesData = ({data, navigation, media}) => {
     return (
         <SafeAreaView>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
@@ -20,6 +20,7 @@ const HorizontalMoviesData = ({data, navigation}) => {
                 <Pressable  
                 onPress={()=>navigation.navigate("Movie Details", {
                   id: item?.id,
+                  media: media,
                 })}
                 >
                 <Image
@@ -34,15 +35,17 @@ const HorizontalMoviesData = ({data, navigation}) => {
                 }}>
                 <View className="flex flex-row relative bottom-7 justify-center h-10 rounded-sm" 
                 style={{
-                    backdropFilter: 'blur(100px)', 
+                    backdropFilter: 'blur(10px)', 
                     backgroundColor: 'rgba(255, 255, 255, 0.6)'
                 }}
                 >
+                  <View className="flex flex-row items-star justify-between">
                   <Text className="text-white mx-3 text-md mt-2">{item?.title ? item?.title.slice(0, 15) : item?.name.slice(0, 15)}</Text>
                   <Text className="bg-transparent text-white mt-2 text-md">
                     {Math.round(item?.vote_average*10)/10}
                   </Text>
-                  <Ionicons name="md-star" size={20} color="gold" className="mt-2"/>
+                  <Ionicons name="md-star" size={20} color="gold" style={{marginTop: 4, marginLeft: 6}}/>
+                  </View>
                 </View>
                 </View>
               </View>
