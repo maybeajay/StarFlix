@@ -36,3 +36,5 @@ yarn-error.*
 
 
 .env
+
+node_modules
