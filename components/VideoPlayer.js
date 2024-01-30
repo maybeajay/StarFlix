@@ -1,10 +1,11 @@
 import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
-import React, { useCallback, useState } from "react";
-import { View, Dimensions, Button } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { View, StatusBar, Button, Platform } from "react-native";
 
 // added dependencies
-import YoutubePlayer from "react-native-youtube-iframe"
+
+import { WebView } from 'react-native-webview';
 
 const VideoPlayer = ({ route }) => {
   const { id, media } = route?.params;
@@ -16,15 +17,6 @@ const VideoPlayer = ({ route }) => {
 
       console.log(media)
   const [videoDetails, setvideoDetails] = useState([]);
-  const [playing, setPlaying] = useState(false);
-
-  const onStateChange = useCallback((state) => {
-    if (state === "ended") {
-      setPlaying(false);
-      Alert.alert("video has finished playing!");
-    }
-  }, []);
-
 
   const getMovieTrailer = async () => {
     try {
@@ -58,15 +50,13 @@ const VideoPlayer = ({ route }) => {
   );
 
   return (
-    <View>
-      <YoutubePlayer
-        height={Dimensions.get('window').height}
-        width={Dimensions.get('window').width}
-        play={playing}
-        videoId={
-          !videoDetails[1]?.key ? videoDetails[0]?.key : videoDetails[1]?.key
-        }
-        onChangeState={onStateChange}
+    <View style={{flex: 1}}>
+      <StatusBar backgroundColor={"#fc0101"}/>
+      <WebView 
+      style={ {  marginTop: (Platform.OS == 'ios') ? 20 : 0,} }
+      javaScriptEnabled={true}
+      domStorageEnabled={true}
+      source={{uri: `https://www.youtube.com/watch?v=${!videoDetails[1]?.key ? videoDetails[0]?.key : videoDetails[1]?.key }`}}
       />
     </View>
   );
