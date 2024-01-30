@@ -10,13 +10,13 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 const HorizontalMoviesData = ({data, navigation, media}) => {
     return (
         <SafeAreaView>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} alwaysBounceHorizontal={false} overScrollMode='never'>
           <FlatList
             data={data}
             horizontal
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
-              <View className="flex mx-5">
+              <View className="flex mx-1">
                 <Pressable  
                 onPress={()=>navigation.navigate("Movie Details", {
                   id: item?.id,
@@ -25,26 +25,24 @@ const HorizontalMoviesData = ({data, navigation, media}) => {
                 >
                 <Image
                   source={{ uri: `${imageUrl}${item?.poster_path}` }}
-                  style={{ width: 170, height: 200, resizeMode: "contain" }}
-                  className="rounded-md object-contain"
+                  style={{ width: 170, height: 215, resizeMode: "contain"}}
                 />
                 </Pressable>
                 <View style={{
-                    width: 170,
+                    width: "95%",
                     display: 'flex',
                 }}>
-                <View className="flex flex-row relative bottom-7 justify-center h-10 rounded-sm" 
+                <View className="flex flex-row relative bottom-7 justify-around h-8 rounded-sm" 
                 style={{
-                    backdropFilter: 'blur(10px)', 
-                    backgroundColor: 'rgba(255, 255, 255, 0.6)'
+                    backgroundColor: 'rgba(255, 255, 255, 0.4)'
                 }}
                 >
                   <View className="flex flex-row items-star justify-between">
-                  <Text className="text-white mx-3 text-md mt-2">{item?.title ? item?.title.slice(0, 15) : item?.name.slice(0, 15)}</Text>
+                  <Text className="text-white mx-3 text-md mt-2">{item?.title ? item?.title.slice(0, 7) : item?.name.slice(0, 15)}</Text>
                   <Text className="bg-transparent text-white mt-2 text-md">
                     {Math.round(item?.vote_average*10)/10}
                   </Text>
-                  <Ionicons name="md-star" size={20} color="gold" style={{marginTop: 4, marginLeft: 6}}/>
+                  <Ionicons name="md-star" size={17} color="gold" style={{marginTop: 4, marginLeft: 6}}/>
                   </View>
                 </View>
                 </View>

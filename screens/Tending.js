@@ -4,16 +4,16 @@ import { useFocusEffect } from "@react-navigation/native";
 import {
   ScrollView,
   Text,
-  SafeAreaView
+  SafeAreaView,
+  View,
+  TouchableOpacity
 } from "react-native";
 import { useContext } from "react";
 // added dependencies
 import axios from "axios";
-import { Context } from "../App";
+import { Context } from "../screens/Navigator";
 import HorizontalMoviesData from "../components/HorizontalMoviesData";
-
-
-console.log("+++++", process.env.REACT_BASE_URL);
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 const Trending = ({navigation}) => {
   const [popularMovies, setPopularMovies] = useState([]);
@@ -111,7 +111,12 @@ const Trending = ({navigation}) => {
   return(
     <SafeAreaView className="bg-white flex-1">
       <ScrollView showsVerticalScrollIndicator={false}>
-      <Text className="color-[#0D111f] text-lg mx-3 mb-2 mt-4">Trending Movies!</Text>
+        <View className="flex flex-row justify-between w-full mt-5">
+        <Text className="color-[#0D111f] text-lg mx-3 mb-2 mt-4">Trending Movies!</Text>
+        <TouchableOpacity onPress={()=>navigation.navigate("Details View",{media: "movie"})}>
+        <Text className="color-[#0D111f] text-lg mx-3 mb-2 mt-4">view More <Ionicons name="chevron-forward-outline" size={20}/> </Text>
+        </TouchableOpacity>
+        </View>
       <HorizontalMoviesData data={popularMovies} navigation={navigation} media={"movie"}/>
       <Text className="color-[#0D111f] text-lg mx-3 mb-6 mt-2">Popular TV shows!</Text>
       <HorizontalMoviesData data={trendingSeries} navigation={navigation} media={"tv"}/>

@@ -1,6 +1,6 @@
 import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext, useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
   Linking,
   Pressable,
 } from "react-native";
-import { Context } from "../App";
+import { Context } from "../screens/Navigator";
 
 // added dependecies
 import { imageUrl } from "../constant";
@@ -22,6 +22,7 @@ import "moment-duration-format";
 import { Clapperboard, Play } from "lucide-react-native";
 import { Skeleton } from "moti/skeleton";
 import UserReviews from '../components/UserReviews'
+import { useScrollToTop } from '@react-navigation/native';
 
 const MovieDetails = ({ route, navigation }) => {
   const { id, media } = route?.params;
@@ -132,12 +133,24 @@ const MovieDetails = ({ route, navigation }) => {
     console.log();
     if (supported) Linking.openURL(movieDetails?.homepage);
   };
+
+  const scrollViewRef = useRef(null)
+
+const scrollTop = () => {
+  if (scrollViewRef.current) {
+    scrollViewRef.current.scrollTo({ y: 0, animated: true })
+  }
+}
+useEffect(()=>{
+  scrollTop()
+}, [id])
+
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <ScrollView showsVerticalScrollIndicator={false} ref={scrollViewRef}
+    sharedTransitionTag="tag">
       <View>
         <Skeleton.Group show={loading} colorMode={"light"}>
         <View className="mt-[30px] rounded-lg">
-        <Skeleton>
           <BlurView
             intensity={80}
             tint="light"
@@ -147,7 +160,6 @@ const MovieDetails = ({ route, navigation }) => {
               padding: 10,
             }}
           >
-            <View>
              <Image
                   source={{ uri: `${imageUrl}${movieDetails.poster_path}` }}
                   style={{
@@ -156,14 +168,12 @@ const MovieDetails = ({ route, navigation }) => {
                     height: 400,
                   }}
                   className="rounded-lg mt-1"
+                  sharedTransitionTag="tag"
                 />
-              </View>
           </BlurView>
-          </Skeleton>
           {/* voting average and release year */}
-          <Skeleton>
           <View className="relative">
-            <View className="w-[77%] flex flex-row items-center gap-1  bottom-[10px] left-[50px] rounded-lg absolute inset-0 bg-white opacity-80 filter blur-md justify-around font-semibold">
+            <View className="w-[68%] flex flex-row items-center gap-1  bottom-[10px] left-[50px] rounded- absolute inset-0 bg-white opacity-80 filter blur-md justify-around font-semibold mx-3">
               <Ionicons
                 name="md-star"
                 size={20}
@@ -193,10 +203,8 @@ const MovieDetails = ({ route, navigation }) => {
               </Text>
             </View>
           </View>
-          </Skeleton>
 
           {/* watch trailer */}
-          <Skeleton>
           <View className="mt-5 flex items-center w-full flex-row h-[50px] mx-5">
             <View className="w-[45%]">
               <Pressable
@@ -212,10 +220,13 @@ const MovieDetails = ({ route, navigation }) => {
                   borderTopLeftRadius: 40,
                 }}
               >
-                <Clapperboard size={30} color="white" />
+                {/* <Clapperboard size={30} color="white" />
+                 */}
+                 <Ionicons name="logo-youtube" size={28} color={"white"}/> 
                 <Text className="text-white font-semibold mx-2 text-lg">
                   Watch Trailer
                 </Text>
+                
               </Pressable>
             </View>
 
@@ -235,7 +246,6 @@ const MovieDetails = ({ route, navigation }) => {
               </Pressable>
             </View>
           </View>
-          </Skeleton>
 
           {/* genre and links */}
           <View className="flex justify-start flex-row items-center mt-5">

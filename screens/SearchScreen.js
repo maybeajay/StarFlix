@@ -30,7 +30,7 @@ const SearchScreen = ({navigation}) => {
   const getSearchResult = async () => {
     try {
       const res = await axios.get(
-        `${process.env.REACT_BASE_URL}search/movie?query=${query}&include_adult=false&language=en-US&page=1`,
+        `${process.env.REACT_BASE_URL}search/multi?query=${query}&include_adult=false&language=en-US&page=1`,
         {
           headers: {
             accept: "application/json",
@@ -63,9 +63,10 @@ const SearchScreen = ({navigation}) => {
 
 
   // handling navigating to details page
+  console.log(searchMovies)
 
   const handleDetailPageNavigation = (id)=>{
-    navigation.navigate("Movie Details", {id: id, media: "movie" | "tv"});
+    navigation.navigate("Movie Details", {id: id, media: searchMovies[0]?.media_type});
   }
 
   // get label from id
@@ -166,7 +167,7 @@ const SearchScreen = ({navigation}) => {
                     {item?.title}
                   </Text>
                   <Text className="bg-[#6936f5] w-[50px] text-center text-white rounded-xl mt-2 opacity-[0.8]">
-                    {item?.release_date.slice(0, 4)}
+                    {item?.release_date?.slice(0, 4)}
                   </Text>
                   <View className="flex flex-row flex-wrap items-center" 
                   style={{
