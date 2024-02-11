@@ -11,7 +11,7 @@ import {
 import { useContext } from "react";
 // added dependencies
 import axios from "axios";
-import { Context } from "../screens/Navigator";
+import { AuthContext } from "../screens/Navigator";
 import HorizontalMoviesData from "../components/HorizontalMoviesData";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
@@ -20,7 +20,7 @@ const Trending = ({navigation}) => {
   const [trendingSeries, settrendingSeries] = useState([]);
   const [arrivingSoon, setarrivingSoon]=useState([]);
   const [topRated, settopRated]=useState([]);
-  const { loading, setLoading } = useContext(Context);
+  const { loading, setLoading } = useContext(AuthContext);
 
   // for popular movies
   const getPopularMovies = async () => {

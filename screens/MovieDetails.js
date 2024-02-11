@@ -9,7 +9,7 @@ import {
   Linking,
   Pressable,
 } from "react-native";
-import { Context } from "../screens/Navigator";
+import { AuthContext } from "../screens/Navigator";
 
 // added dependecies
 import { imageUrl } from "../constant";
@@ -31,7 +31,7 @@ const MovieDetails = ({ route, navigation }) => {
   const [userReviews, setuserReviews] = useState([]);
   const [crew, setCrew] = useState([]);
 
-  const { loading, setLoading } = useContext(Context);
+  const { loading, setLoading, isSignedIn, setisSignedIn } = useContext(AuthContext);
 
   // headers 
   const Headers = {
@@ -172,8 +172,8 @@ useEffect(()=>{
                 />
           </BlurView>
           {/* voting average and release year */}
-          <View className="relative">
-            <View className="w-[68%] flex flex-row items-center gap-1  bottom-[10px] left-[50px] rounded- absolute inset-0 bg-white opacity-80 filter blur-md justify-around font-semibold mx-3">
+          <View className="relative mb-5">
+            <View className="w-[100%] flex flex-row items-center gap-1  rounded- absolute inset-0 filter blur-md justify-around font-semibold ">
               <Ionicons
                 name="md-star"
                 size={20}
@@ -301,7 +301,7 @@ useEffect(()=>{
                       key={item.id}
                       style={{ margin: 5, alignItems: "center" }}
                     >
-                      <TouchableWithoutFeedback
+                      <Pressable
                         onPress={() =>
                           navigation.navigate("People Details", {
                             id: item?.id,
@@ -314,7 +314,7 @@ useEffect(()=>{
                             width: 80,
                             height: 80,
                             borderRadius: 40,
-                            resizeMode: "contain",
+                            resizeMode: "cover",
                           }}
                         />
                         <Text
@@ -327,7 +327,7 @@ useEffect(()=>{
                         >
                           {item?.original_name}
                         </Text>
-                      </TouchableWithoutFeedback>
+                      </Pressable>
                     </View>
                   ))}
               </ScrollView>

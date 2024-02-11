@@ -1,19 +1,19 @@
 // project imports
 import React from 'react';
-import {View, ScrollView, SafeAreaView, Image, FlatList, Text, Pressable} from 'react-native';
+import {View, ScrollView, SafeAreaView, Image, Text, Pressable, FlatList} from 'react-native';
 import { imageUrl } from '../constant';
 
 // added dependencies
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-
 const HorizontalMoviesData = ({data, navigation, media}) => {
     return (
         <SafeAreaView>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} alwaysBounceHorizontal={false} overScrollMode='never'>
           <FlatList
             data={data}
             horizontal
+            scrollEnabled
+            showsHorizontalScrollIndicator={false}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
               <View className="flex mx-1">
@@ -49,7 +49,6 @@ const HorizontalMoviesData = ({data, navigation, media}) => {
               </View>
             )}
           />
-        </ScrollView>
       </SafeAreaView>
     );
 }

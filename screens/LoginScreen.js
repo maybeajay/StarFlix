@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TextInput } from "react-native";
 import { View, Text, SafeAreaView, TouchableOpacity, ImageBackground } from "react-native";
-
-const LoginScreen = ({ navigation }) => {
+import { AuthContext } from "./Navigator";
+const LoginScreen = () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const [userData, setuserData] = useState({
     email: "",
     password: "",
   });
+  const {isSignedIn, setisSignedIn} = useContext(AuthContext)
   const [emailError, setemailError] = useState(null);
   const [passError, setpassError] = useState(null);
   const handleChange = (name, value) => {
@@ -34,14 +35,16 @@ const LoginScreen = ({ navigation }) => {
     if(userData.password=="" || userData.password==null){
       setpassError("Password is required*");
     }
-    if (
-      userData.email == "sallubhai@yopmail.com" &&
-      userData.password == "12345678"
-    ) {
-      navigation.navigate("HomeScreen");
-      await AsyncStorage.setItem("token", "adsasdasdsdadsad");
-    }
-    console.log(userData);
+    // if (
+    //   userData.email == "sallubhai@yopmail.com" &&
+    //   userData.password == "12345678"
+    // ) {
+    //   await AsyncStorage.setItem("token", "adsasdasdsdadsad");
+    //   navigation.navigate("HomeScreen");
+    // }
+    // console.log(userData);
+    await AsyncStorage.setItem("authToken", "adsasdasdsdadsad");
+    setisSignedIn(true);
   };
   return (
     <SafeAreaView
@@ -79,7 +82,7 @@ const LoginScreen = ({ navigation }) => {
             passError && <Text className="text-white ">{passError}</Text>
           }
           <TouchableOpacity className="w-80 h-10 bg-white mt-6 rounded-xl flex justify-center">
-            <Text className="text-center" onPress={handleLogin}>
+            <Text className="text-center" onPress={()=>handleLogin()}>
               Login
             </Text>
           </TouchableOpacity>
