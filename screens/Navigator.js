@@ -1,15 +1,13 @@
-import React from "react";
+import React, {useEffect, createContext, useState, useContext} from "react";
 import { StatusBar } from "expo-status-bar";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigationContainerRef  } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "./HomeScreen";
 import Trending from "./Tending";
 import SearchScreen from "./SearchScreen";
-import { createContext, useState } from "react";
 
 // Added imports
-import { Search } from "lucide-react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { Search, Home } from "lucide-react-native";
 import { Flame } from "lucide-react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import MovieDetails from "../screens/MovieDetails";
@@ -20,11 +18,11 @@ import "react-native-reanimated";
 import "react-native-gesture-handler";
 import LoginScreen from "./LoginScreen";
 import DetailsViewPage from './DetailsViewPage'
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // screens navigator
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
-const Context = createContext();
-
+const AuthContext = createContext();
 const BottomNavigator = () => {
   return (
     <Tab.Navigator
@@ -48,11 +46,7 @@ const BottomNavigator = () => {
           tabBarShowLabel: false,
           tabBarIcon: ({ size, focused, color }) => {
             return (
-              <Ionicons
-                name="md-home"
-                size={30}
-                color={focused ? "#6936f5" : "black"}
-              />
+              <Home size={30} color={focused ? "#6936f5" : "black"} />
             );
           },
         }}
@@ -86,28 +80,51 @@ const BottomNavigator = () => {
   );
 };
 
+
 const Navigator = () => {
   const [loading, setLoading] = useState(false);
+  const [authToken, setAuthToken] = useState();
+  const [isSignedIn, setisSignedIn] = useState(false);
+  useEffect(() => {
+    const checkToken = async () => {
+      const storedToken = await AsyncStorage.getItem("authToken");
+      setAuthToken(storedToken);
+    };
+    checkToken();
+  }, []);
+
+  // useEffect(()=>{
+  //   if(authToken!=null){
+  //     setisSignedIn(true);
+  //   }else{
+  //     setisSignedIn(false);
+  //   }
+  // }, [isSignedIn]);
   return (
-    <NavigationContainer>
-      <Context.Provider value={{ loading, setLoading }}>
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
-          }}
-        >
-          <Stack.Screen name="HomeScreen" component={BottomNavigator} />
-          <Stack.Screen name="Movie Details" component={MovieDetails} />
-          <Stack.Screen name="People Details" component={CastDetailsScreen} />
-          <Stack.Screen name="Video Player" component={VideoPlayer} />
-          <Stack.Screen name="PlaceHolder" component={PlaceHolder} />
-          <Stack.Screen name="Details View" component={DetailsViewPage} />
-          <Stack.Screen name="Login" component={LoginScreen} />
-        </Stack.Navigator>
-      </Context.Provider>
-    </NavigationContainer>
+    <AuthContext.Provider value={{ loading, setLoading, isSignedIn, setisSignedIn }}>
+      <NavigationContainer>
+         <Stack.Navigator
+            screenOptions={{
+              headerShown: false,
+            }}
+          >
+            {
+              isSignedIn ? 
+              <>
+              <Stack.Screen name="HomeScreen" component={BottomNavigator} />
+             <Stack.Screen name="Movie Details" component={MovieDetails} />
+            <Stack.Screen name="People Details" component={CastDetailsScreen} />
+            <Stack.Screen name="Video Player" component={VideoPlayer} />
+            <Stack.Screen name="PlaceHolder" component={PlaceHolder} />
+            <Stack.Screen name="Details View" component={DetailsViewPage} />
+              </>
+             :
+             <Stack.Screen name="Login" component={LoginScreen} />
+            }
+          </Stack.Navigator>
+      </NavigationContainer>
+      </AuthContext.Provider>
   );
 };
-
+export {AuthContext};
 export default Navigator;
-export {Context};

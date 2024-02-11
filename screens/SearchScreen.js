@@ -94,7 +94,6 @@ const SearchScreen = ({navigation}) => {
   }, [searchMovies]);
 
   return (
-    <ScrollView className="bg-white" showsVerticalScrollIndicator={false}>
       <SafeAreaView style={{ height: "100%" }}>
         <View classname="flex flex-row items-center">
           <View
@@ -105,7 +104,7 @@ const SearchScreen = ({navigation}) => {
               marginLeft: "auto",
               width: "80%",
               marginRight: "auto",
-              marginTop: 60,
+              marginTop: 50,
             }}
             className="bg-gray-60 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2"
           >
@@ -130,6 +129,8 @@ const SearchScreen = ({navigation}) => {
         </View>
         <View className="flex flex-col p-5 items-center">
           <FlatList
+            scrollEnabled
+            showsVerticalScrollIndicator={false}
             data={searchMovies}
             renderItem={({ item }) => (
               <TouchableOpacity
@@ -190,7 +191,6 @@ const SearchScreen = ({navigation}) => {
           />
         </View>
       </SafeAreaView>
-    </ScrollView>
   );
 };
 

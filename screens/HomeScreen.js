@@ -6,10 +6,11 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
+  Dimensions
 } from "react-native";
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext, useState, useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import { Context } from "../screens/Navigator";
+import {AuthContext} from '../screens/Navigator'
 // added imports
 import { imageUrl } from "../constant";
 import axios from "axios";
@@ -17,11 +18,17 @@ import HorizontalMoviesData from '../components/HorizontalMoviesData'
 import { Skeleton } from 'moti/skeleton'
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SkeletonLoader from "expo-skeleton-loader";
+import CardLoader from "../common/CardLoader";
+const { width, height } = Dimensions.get("window")
+
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [upcomingMovies, setupcomingMovies] = useState([]);
   const [arrivingToday, setarrivingToday] = useState([]);
-  const { loading, setLoading } = useContext(Context);
+  const { loading, setLoading, isSignedIn, setisSignedIn } = useContext(AuthContext);
+  const [authToken, setAuthToken] = useState();
+  const [nowplayingData, setnowplayingData] = useState([]);
   // get upcoming movies
   const Headers = {
     headers: {
@@ -49,7 +56,6 @@ const HomeScreen = () => {
     try {
       const res = await axios.get(`${process.env.REACT_BASE_URL}tv/on_the_air?language=en-US&page=1`, Headers);
       await setarrivingToday(res?.data?.results);
-      console.log(res?.data?.results);
     } catch (error) {
       console.log(error)
     }finally{
@@ -57,22 +63,78 @@ const HomeScreen = () => {
     }
   }
 
+  // now playing in India
+  const nowPlaying = async ()=>{
+    try {
+      const res = await axios.get(`${process.env.REACT_BASE_URL}movie/now_playing?language=en-US&page=1&region=US`, Headers);
+      console.log("RSSSS",res);
+      await setnowplayingData(res?.data?.results);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useFocusEffect(
     useCallback(() => {
       getupMoviesDetails();
       arrivingTodaySeries();
+      nowPlaying();
     }, [])
   );
   const LogOut = async ()=>{
-    await AsyncStorage.removeItem("token");
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Login' }],
-    });
+   await setisSignedIn(false);
+    await AsyncStorage.clear();
   }
+  useEffect(() => {
+    const checkToken = async () => {
+      const storedToken = await AsyncStorage.getItem("authToken");
+      setAuthToken(storedToken);
+    };
+    checkToken();
+  }, []);
+  console.warn(authToken);
+  const AvatarLayout = ({
+  }) => (
+    <SkeletonLoader>
+      <SkeletonLoader.Container
+        style={{ flex: 1, flexDirection: "column", alignItems: "flex-start", justifyContent: 'center', marginLeft: 10 }}
+      >
+        <SkeletonLoader.Item
+          style={{
+            width: 80,
+            height: 80,
+            borderRadius: 80,
+          }}
+        />
+        <SkeletonLoader.Container style={{ paddingVertical: 10, display: "flex", flexDirection: 'column', alignItems: "center", justifyContent: "center" }}>
+          <SkeletonLoader.Item
+            style={{ width: 100, height: 10, marginBottom: 5, }}
+          />
+        </SkeletonLoader.Container>
+      </SkeletonLoader.Container>
+    </SkeletonLoader>
+  );
+  
+  // Example usage:
+  // <CardLayout />
+  
+  const avatarData = [1, 2, 3, 4, 5, 6, 7, 8]
   return (
     <ScrollView>
-      <View className="mt-10">
+      {
+        false  ? <SkeletonLoader style={{ marginVertical: 10 }} highlightColor="#2e2e2e" boneColor="#fff" duration={2000}>
+         <View style={{display: "flex", flexDirection: 'row'}}>
+         {
+          avatarData.map((item)=> <AvatarLayout style={{ marginBottom: 10 }} />)
+         }
+         </View>
+        <SkeletonLoader.Item
+          style={{ width, height: height / 3.5, marginVertical: 10 }}
+        />
+        <CardLoader times={avatarData}/>
+      </SkeletonLoader> :
+      <>
+        <View className="mt-10">
         <Text className="mx-5 text-xl mt-3">Movies on the way!</Text>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="mt-5">
           <FlatList
@@ -101,9 +163,14 @@ const HomeScreen = () => {
       </View>
       <View className="mt-10"> 
           <Text className="mx-5 text-xl font-semibold mb-5">Tv Shows Arriving Today!</Text>
-          <HorizontalMoviesData data={arrivingToday} navigation={navigation} media={"Tv"}/>
-          <TouchableOpacity onPress={()=>LogOut()}><Text>Logout</Text></TouchableOpacity>
+          <HorizontalMoviesData data={arrivingToday} navigation={navigation} media={"tv"}/>
           </View>
+          <View className="mt-5"> 
+          <Text className="mx-5 text-lg font-normal mb-5">Popular Movies in your Region!</Text>
+          <HorizontalMoviesData data={nowplayingData} navigation={navigation} media={"movie"}/>
+          </View>
+        </>
+      }
     </ScrollView>
   );
 };
