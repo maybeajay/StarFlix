@@ -8,6 +8,8 @@ import {
   Image,
   Linking,
   Pressable,
+  StyleSheet,
+  Alert
 } from "react-native";
 import { AuthContext } from "../screens/Navigator";
 
@@ -16,13 +18,16 @@ import { imageUrl } from "../constant";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { BlurView } from "expo-blur";
 import HorizontalMoviesData from "../components/HorizontalMoviesData";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import moment from "moment";
 import "moment-duration-format";
 import { Clapperboard, Play } from "lucide-react-native";
 import { Skeleton } from "moti/skeleton";
 import UserReviews from '../components/UserReviews'
-import { useScrollToTop } from '@react-navigation/native';
+import Animated, { FadeIn, FadeInLeft, FadeOut, FadeOutRight, LightSpeedInLeft, LightSpeedOutRight } from 'react-native-reanimated';
+
+const apiUrl = process.env.EXPO_PUBLIC_API_URL
+const ACCESS_TOKEN = process.env.EXPO_PUBLIC_ACESS_TOKEN;
+const AnimatedText = Animated.createAnimatedComponent(Text);
 
 const MovieDetails = ({ route, navigation }) => {
   const { id, media } = route?.params;
@@ -31,13 +36,13 @@ const MovieDetails = ({ route, navigation }) => {
   const [userReviews, setuserReviews] = useState([]);
   const [crew, setCrew] = useState([]);
 
-  const { loading, setLoading, isSignedIn, setisSignedIn } = useContext(AuthContext);
+  const { loading, setLoading } = useContext(AuthContext);
 
   // headers 
   const Headers = {
     headers: {
       accept: "application/json",
-      Authorization: `${process.env.REACT_ACCESS_TOKEN}`,
+      Authorization: ACCESS_TOKEN,
     },
   }
 
@@ -47,7 +52,7 @@ const MovieDetails = ({ route, navigation }) => {
   const getDetailsById = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${process.env.REACT_BASE_URL}${finalUrl}`, Headers);
+      const res = await axios.get(apiUrl+`${finalUrl}`, Headers);
       await setmovieDetails(res?.data);
       setLoading(false);
       console.log(res?.data);
@@ -66,11 +71,11 @@ const MovieDetails = ({ route, navigation }) => {
     try {
       setLoading(true);
       const res = await axios.get(
-        `${process.env.REACT_BASE_URL}${recomendedUrl}`,
+        apiUrl+`${recomendedUrl}`,
         {
           headers: {
             accept: "application/json",
-            Authorization: `${process.env.REACT_ACCESS_TOKEN}`,
+            Authorization: ACCESS_TOKEN,
           },
         }
       );
@@ -86,7 +91,7 @@ const MovieDetails = ({ route, navigation }) => {
   console.log(reviewUrl);
   const getuserReviews = async()=>{
     try {
-      const res = await axios.get(`${process.env.REACT_BASE_URL}${reviewUrl}`, Headers);
+      const res = await axios.get(apiUrl+`${reviewUrl}`, Headers);
       await setuserReviews(res?.data?.results)
       console.log("RRRRR",res?.data?.results);
     } catch (error) {
@@ -103,10 +108,10 @@ const MovieDetails = ({ route, navigation }) => {
   const getCrewDetails = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${process.env.REACT_BASE_URL}${credsUrl}`, {
+      const res = await axios.get(apiUrl+`${credsUrl}`, {
         headers: {
           accept: "application/json",
-          Authorization: `${process.env.REACT_ACCESS_TOKEN}`,
+          Authorization: ACCESS_TOKEN,
         },
       });
       await setCrew(res?.data?.cast);
@@ -132,6 +137,7 @@ const MovieDetails = ({ route, navigation }) => {
     const supported = await Linking.canOpenURL(movieDetails?.homepage);
     console.log();
     if (supported) Linking.openURL(movieDetails?.homepage);
+    else Alert.alert("Something went wrong")
   };
 
   const scrollViewRef = useRef(null)
@@ -144,13 +150,16 @@ const scrollTop = () => {
 useEffect(()=>{
   scrollTop()
 }, [id])
+const [isShown, setShown] = useState(false);
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false} ref={scrollViewRef}
+    <Animated.ScrollView showsVerticalScrollIndicator={false} ref={scrollViewRef}
     sharedTransitionTag="tag">
-      <View>
+      <View >
         <Skeleton.Group show={loading} colorMode={"light"}>
-        <View className="mt-[30px] rounded-lg">
+        <Animated.View className="mt-[30px] rounded-lg" 
+        entering={LightSpeedInLeft} 
+        exiting={LightSpeedOutRight} >
           <BlurView
             intensity={80}
             tint="light"
@@ -252,11 +261,11 @@ useEffect(()=>{
             <View className="flex flex-row mx-5 justify-start flex-wrap space-x-2">
               {movieDetails &&
                 movieDetails?.genres?.map((item) => (
-                  <View>
+                  <Animated.View entering={FadeInLeft} exiting={FadeOutRight}>
                     <Text className="text-md text-[#28303d]">
                       {item?.name} .
                     </Text>
-                  </View>
+                  </Animated.View>
                 ))}
             </View>
             {media == "tv" ? (
@@ -267,28 +276,28 @@ useEffect(()=>{
           </View>
 
           {/* Movie title and overview */}
-          <View className="mt-5 mx-5">
-            <Text
+          <Animated.View className="mt-5 mx-5" entering={FadeInLeft} exiting={FadeOut}>
+            <Animated.Text
               className="font-bold"
               style={{
                 maxWidth: "80%",
                 fontSize: 23,
               }}
+              // className="font-bold"
             >
               {!movieDetails?.name ? movieDetails?.title : movieDetails?.name}
-            </Text>
-            <Text
-              className="mt-3 font-semibold"
+            </Animated.Text>
+            <AnimatedText
+              className="mt-3 font-normal"
               style={{
                 fontSize: 16,
-              }}
-            >
+              }}            >
               {movieDetails?.overview}
-            </Text>
-          </View>
+            </AnimatedText>
+          </Animated.View>
 
           {/* for cast & crew */}
-          <View className="mx-5 mt-5">
+          <Animated.View className="mx-5 mt-5" sharedTransitionTag="sharedTagsss">
             <Text className="text-xl font-bold mt-3 mb-3">Cast & Crew</Text>
             <View style={{ flexDirection: "row" }} className="">
               <ScrollView
@@ -332,7 +341,7 @@ useEffect(()=>{
                   ))}
               </ScrollView>
             </View>
-          </View>
+          </Animated.View>
 
           {/* available on */}
           {media == "tv" ? (
@@ -373,11 +382,43 @@ useEffect(()=>{
               media={media}
             />
           </View>
-        </View>
+        </Animated.View>
         </Skeleton.Group>
       </View>
-    </ScrollView>
+    </Animated.ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+  },
+  text: {
+    flexDirection: 'row',
+  },
+  tab: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+  },
+  label: {
+    fontSize: 15,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginRight: 8,
+  },
+  divider: {
+    borderRightWidth: 1,
+    borderRightColor: '#ddd',
+  },
+  animatedBorder: {
+    height: 8,
+    width: 64,
+    backgroundColor: 'tomato',
+    borderRadius: 20,
+  },
+});
 
 export default MovieDetails;

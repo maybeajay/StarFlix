@@ -19,6 +19,7 @@ import "react-native-gesture-handler";
 import LoginScreen from "./LoginScreen";
 import DetailsViewPage from './DetailsViewPage'
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { NavigationContainerRef } from '@react-navigation/native';
 // screens navigator
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -85,31 +86,37 @@ const Navigator = () => {
   const [loading, setLoading] = useState(false);
   const [authToken, setAuthToken] = useState();
   const [isSignedIn, setisSignedIn] = useState(false);
+  const [loginToken, setloginToken] = useState(null);
+
+  const NavigationContainerRef = React.createRef();
+
   useEffect(() => {
     const checkToken = async () => {
-      const storedToken = await AsyncStorage.getItem("authToken");
-      setAuthToken(storedToken);
+      try {
+        const storedToken = await AsyncStorage.getItem("authToken");
+        const login = await AsyncStorage.getItem('keepLoggedIn');
+
+        setAuthToken(storedToken);
+        setloginToken(login);
+      } catch (error) {
+        console.error('Error checking token:', error);
+      } finally {
+        setLoading(false);
+      }
     };
+
     checkToken();
   }, []);
-
-  // useEffect(()=>{
-  //   if(authToken!=null){
-  //     setisSignedIn(true);
-  //   }else{
-  //     setisSignedIn(false);
-  //   }
-  // }, [isSignedIn]);
   return (
     <AuthContext.Provider value={{ loading, setLoading, isSignedIn, setisSignedIn }}>
-      <NavigationContainer>
+      <NavigationContainer ref={NavigationContainerRef}>
          <Stack.Navigator
             screenOptions={{
               headerShown: false,
             }}
           >
             {
-              isSignedIn ? 
+              (isSignedIn) ? 
               <>
               <Stack.Screen name="HomeScreen" component={BottomNavigator} />
              <Stack.Screen name="Movie Details" component={MovieDetails} />

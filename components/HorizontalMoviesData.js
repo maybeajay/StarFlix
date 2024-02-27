@@ -5,6 +5,7 @@ import { imageUrl } from '../constant';
 
 // added dependencies
 import Ionicons from '@expo/vector-icons/Ionicons';
+import Animated from 'react-native-reanimated';
 
 const HorizontalMoviesData = ({data, navigation, media}) => {
     return (
@@ -16,7 +17,7 @@ const HorizontalMoviesData = ({data, navigation, media}) => {
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
-              <View className="flex mx-1">
+              <Animated.View className="flex mx-1" sharedTransitionStyle={"sharedTag"}>
                 <Pressable  
                 onPress={()=>navigation.navigate("Movie Details", {
                   id: item?.id,
@@ -46,7 +47,7 @@ const HorizontalMoviesData = ({data, navigation, media}) => {
                   </View>
                 </View>
                 </View>
-              </View>
+              </Animated.View>
             )}
           />
       </SafeAreaView>

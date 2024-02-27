@@ -14,31 +14,25 @@ const VideoPlayer = ({ route }) => {
     media == "movie"
       ? `movie/${id}/videos?language=en-US`
       : `tv/${id}/videos?language=en-US`;
-
-      console.log(media)
   const [videoDetails, setvideoDetails] = useState([]);
 
   const getMovieTrailer = async () => {
     try {
-      const res = await axios.get(`${process.env.REACT_BASE_URL}${finalUrl}`, {
+      const res = await axios.get(`${process.env.EXPO_BASE_URL}${finalUrl}`, {
         headers: {
           Accept: "application/json",
-          Authorization: `${process.env.REACT_ACCESS_TOKEN}`,
+          Authorization: `${process.env.EXPO_ACCESS_TOKEN}`,
         },
       });
 
-      await console.log(res?.data);
       // getting trailer from the data
       const tempData = await res?.data?.results?.filter(
         (item) => item.type === "Trailer" || item.type === "Teaser"
       );
   
       setvideoDetails(tempData);
-  
-      console.log("resesee", res?.data?.results);
-      console.log("temppppp", tempData);
     } catch (error) {
-      console.log(error);
+      
     }
   };
   
