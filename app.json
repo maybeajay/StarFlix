@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon-home.png",
     "userInterfaceStyle": "light",
+    "jsEngine": "hermes",
     "splash": {
       "image": "./assets/splash-screen.png",
       "resizeMode": "contain",
@@ -16,7 +17,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "requireFullScreen": true
+      "requireFullScreen": true,
+      "jsEngine": "jsc"
     },
     "plugins": [
       [
@@ -28,10 +30,11 @@
     ],
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive.png",
+        "foregroundImage": "./assets/icon-home.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.ajayramola23.movie"
+      "package": "com.ajayramola23.movie",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -41,6 +44,12 @@
         "projectId": "79a1e31c-8ddc-49b4-a577-a81f5d184c4c"
       }
     },
-    "owner": "ajayramola23"
+    "owner": "ajayramola23",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/79a1e31c-8ddc-49b4-a577-a81f5d184c4c"
+    }
   }
 }

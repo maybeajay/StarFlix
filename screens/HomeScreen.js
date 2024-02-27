@@ -6,7 +6,8 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  Alert
 } from "react-native";
 import React, { useCallback, useContext, useState, useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
@@ -20,8 +21,7 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SkeletonLoader from "expo-skeleton-loader";
 import CardLoader from "../common/CardLoader";
-const { width, height } = Dimensions.get("window")
-
+import Animated, { useSharedValue } from "react-native-reanimated";
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [upcomingMovies, setupcomingMovies] = useState([]);
@@ -29,18 +29,22 @@ const HomeScreen = () => {
   const { loading, setLoading, isSignedIn, setisSignedIn } = useContext(AuthContext);
   const [authToken, setAuthToken] = useState();
   const [nowplayingData, setnowplayingData] = useState([]);
+  const widht = useSharedValue(300);
+  const height = useSharedValue(300);
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL
+  const ACCESS_TOKEN = process.env.EXPO_PUBLIC_ACESS_TOKEN;
   // get upcoming movies
   const Headers = {
     headers: {
       accept: "application/json",
-      Authorization: `${process.env.REACT_ACCESS_TOKEN}`,
+      Authorization: ACCESS_TOKEN,
     },
   }
   const getupMoviesDetails = async () => {
     setLoading(true)
     try {
       const res = await axios.get(
-        `${process.env.REACT_BASE_URL}movie/upcoming?language=en-US&page=1`,Headers);
+        apiUrl+`movie/upcoming?language=en-US&page=1`,Headers);
       console.log(res?.data?.results);
       await setupcomingMovies(res?.data?.results);
     } catch (error) {
@@ -54,7 +58,7 @@ const HomeScreen = () => {
   const arrivingTodaySeries = async()=>{
     setLoading(true);
     try {
-      const res = await axios.get(`${process.env.REACT_BASE_URL}tv/on_the_air?language=en-US&page=1`, Headers);
+      const res = await axios.get(apiUrl+`tv/on_the_air?language=en-US&page=1`, Headers);
       await setarrivingToday(res?.data?.results);
     } catch (error) {
       console.log(error)
@@ -66,7 +70,7 @@ const HomeScreen = () => {
   // now playing in India
   const nowPlaying = async ()=>{
     try {
-      const res = await axios.get(`${process.env.REACT_BASE_URL}movie/now_playing?language=en-US&page=1&region=US`, Headers);
+      const res = await axios.get(apiUrl+`movie/now_playing?language=en-US&page=1&region=US`, Headers);
       console.log("RSSSS",res);
       await setnowplayingData(res?.data?.results);
     } catch (error) {
@@ -92,7 +96,6 @@ const HomeScreen = () => {
     };
     checkToken();
   }, []);
-  console.warn(authToken);
   const AvatarLayout = ({
   }) => (
     <SkeletonLoader>
@@ -120,7 +123,7 @@ const HomeScreen = () => {
   
   const avatarData = [1, 2, 3, 4, 5, 6, 7, 8]
   return (
-    <ScrollView>
+    <Animated.ScrollView>
       {
         false  ? <SkeletonLoader style={{ marginVertical: 10 }} highlightColor="#2e2e2e" boneColor="#fff" duration={2000}>
          <View style={{display: "flex", flexDirection: 'row'}}>
@@ -134,10 +137,13 @@ const HomeScreen = () => {
         <CardLoader times={avatarData}/>
       </SkeletonLoader> :
       <>
-        <View className="mt-10">
+        <Animated.View className="mt-10">
         <Text className="mx-5 text-xl mt-3">Movies on the way!</Text>
+        <TouchableOpacity onPress={()=>LogOut()}>
+        <Text>Logout</Text>
+      </TouchableOpacity>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="mt-5">
-          <FlatList
+          <Animated.FlatList
             data={upcomingMovies}
             horizontal
             renderItem={({ item }) => (
@@ -160,7 +166,8 @@ const HomeScreen = () => {
             )}
           />
         </ScrollView>
-      </View>
+      </Animated.View>
+      <Text>{process.env.EXPO_PUBLIC_API_URL}</Text>
       <View className="mt-10"> 
           <Text className="mx-5 text-xl font-semibold mb-5">Tv Shows Arriving Today!</Text>
           <HorizontalMoviesData data={arrivingToday} navigation={navigation} media={"tv"}/>
@@ -171,7 +178,7 @@ const HomeScreen = () => {
           </View>
         </>
       }
-    </ScrollView>
+    </Animated.ScrollView>
   );
 };
 

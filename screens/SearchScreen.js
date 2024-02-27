@@ -15,6 +15,8 @@ import { Search } from "lucide-react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import { imageUrl } from "../constant";
+const apiUrl = process.env.EXPO_PUBLIC_API_URL
+const ACCESS_TOKEN = process.env.EXPO_PUBLIC_ACESS_TOKEN;
 
 
 // added imports
@@ -30,11 +32,11 @@ const SearchScreen = ({navigation}) => {
   const getSearchResult = async () => {
     try {
       const res = await axios.get(
-        `${process.env.REACT_BASE_URL}search/multi?query=${query}&include_adult=false&language=en-US&page=1`,
+        apiUrl+`search/multi?query=${query}&include_adult=false&language=en-US&page=1`,
         {
           headers: {
             accept: "application/json",
-            Authorization: `${process.env.REACT_ACCESS_TOKEN}`,
+            Authorization: ACCESS_TOKEN,
           },
         }
       );
@@ -50,10 +52,10 @@ const SearchScreen = ({navigation}) => {
   // get genre id and label
   const getGenre = async () => {
     try {
-      const res = await axios.get(`${process.env.REACT_BASE_URL}genre/movie/list?language=en`, {
+      const res = await axios.get(apiUrl+`genre/movie/list?language=en`, {
         headers: {
           accept: "application/json",
-          Authorization: `${process.env.REACT_ACCESS_TOKEN}`,
+          Authorization: ACCESS_TOKEN,
         },
       });
       // console.log("rrrrrrrrrrrrr",res);
@@ -165,7 +167,7 @@ const SearchScreen = ({navigation}) => {
                       fontSize: 18
                     }}
                   >
-                    {item?.title}
+                    {!item?.title ? item?.name : item?.title}
                   </Text>
                   <Text className="bg-[#6936f5] w-[50px] text-center text-white rounded-xl mt-2 opacity-[0.8]">
                     {item?.release_date?.slice(0, 4)}

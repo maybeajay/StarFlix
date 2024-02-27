@@ -1,14 +1,54 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { TextInput } from "react-native";
+import { Alert, TextInput } from "react-native";
 import { View, Text, SafeAreaView, TouchableOpacity, ImageBackground } from "react-native";
+import {Ionicons} from '@expo/vector-icons'
 import { AuthContext } from "./Navigator";
+import { FIREBAE_AUTH } from "../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+
 const LoginScreen = () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const [state, setState] = useState()
+  const auth  = FIREBAE_AUTH;
+
   const [userData, setuserData] = useState({
     email: "",
     password: "",
   });
+  // const [state, setState] = useState()
+  // useEffect(()=>{
+  //   GoogleSignin.configure('724562316648-9r1io7rssia3kelc7r4445dhmsf600t0.apps.googleusercontent.com  ')
+  // },[])
+
+  const signIn = async () => {
+   try {
+    const res = await signInWithEmailAndPassword(auth, userData.email, userData.password);
+   } catch (error) {
+    Alert.alert("error", error?.message)
+   }
+  };
+  const handleGoogleLogin = async()=>{
+    try {
+      const result = await expo.Google.logInAsync({
+        androidClientId: "1:724562316648:android:d767a8034b3adcefce1add",
+        //iosClientId: YOUR_CLIENT_ID_HERE,  <-- if you use iOS
+        scopes: ["profile", "email"]
+
+      })
+      if (result.type === "success") {
+        const credential = firebase.auth.GoogleAuthProvider.credential(result.idToken, result.accessToken);
+           firebase.auth().signInAndRetrieveDataWithCredential(credential).then(function(result){
+             console.log(result);
+           });
+ } else {
+   console.log("cancelled")
+ }
+    } catch (e) {
+      console.log("error", e)
+    }
+
+  }
   const {isSignedIn, setisSignedIn} = useContext(AuthContext)
   const [emailError, setemailError] = useState(null);
   const [passError, setpassError] = useState(null);
@@ -44,8 +84,10 @@ const LoginScreen = () => {
     // }
     // console.log(userData);
     await AsyncStorage.setItem("authToken", "adsasdasdsdadsad");
+    await AsyncStorage.setItem("keeploogedin", "true");
     setisSignedIn(true);
   };
+  
   return (
     <SafeAreaView
       style={{
@@ -55,9 +97,6 @@ const LoginScreen = () => {
         height: "100%",
       }}
     >
-      <ImageBackground
-      source={require("../assets/marvel.jpg")}
-      className="flex w-full h-full items-center">
         <Text className="text-4xl font-bold text-white mt-[10vh]">
           Lets Get You Started
         </Text>
@@ -86,8 +125,15 @@ const LoginScreen = () => {
               Login
             </Text>
           </TouchableOpacity>
-        </View>
-      </ImageBackground>
+
+          <View className="mt-5">
+            <Text>OR</Text>
+            <TouchableOpacity onPress={()=>signIn()} className="flex flex-row items-center mx-3">
+              <Ionicons name="logo-google" size={25} />
+              <Text>Login With Google</Text>
+            </TouchableOpacity>
+            </View>
+          </View>
     </SafeAreaView>
   );
 };

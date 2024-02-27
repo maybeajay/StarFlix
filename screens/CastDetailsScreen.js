@@ -4,10 +4,11 @@ import React, { useCallback, useState } from "react";
 import { ScrollView, SafeAreaView, View, Text, Image } from "react-native";
 
 import { imageUrl } from "../constant";
-
+import Animated from "react-native-reanimated";
+const apiUrl = process.env.EXPO_PUBLIC_API_URL
+const ACCESS_TOKEN = process.env.EXPO_PUBLIC_ACESS_TOKEN;
 const CastDetailsScreen = ({navigation, route}) => {
   const [peopleDetails, setpeopleDetails] = useState([]);
-  const [showFull, setshowFull] = useState(false);
   const {id} = route?.params;
 
   // get cast details by id
@@ -15,11 +16,11 @@ const CastDetailsScreen = ({navigation, route}) => {
   const getCastDetailsById = async () => {
     try {
       const res = await axios.get(
-        `${process.env.REACT_BASE_URL}person/${id}?language=en-US`,
+        apiUrl+`person/${id}?language=en-US`,
         {
           headers: {
             accept: "application/json",
-            Authorization: `${process.env.REACT_ACCESS_TOKEN}`,
+            Authorization: ACCESS_TOKEN,
           },
         }
       );
@@ -40,7 +41,7 @@ useFocusEffect(useCallback(()=>{
 const Wrapper = ({show, text})=>{
   
 }
-  return <ScrollView showsVerticalScrollIndicator={false}>
+  return <Animated.ScrollView showsVerticalScrollIndicator={false} sharedTransitionTag="sharedTagsss">
     {/* images and stuff */}
     <View>
         <Image source={{uri: imageUrl+peopleDetails?.profile_path}}
@@ -54,7 +55,7 @@ const Wrapper = ({show, text})=>{
         />
         {/* for name and stuff */}
         <SafeAreaView className="">
-            <Text className="text-4xl font-bold relative bottom-[80] left-8 text-white max-w-[90]">{peopleDetails?.name}</Text>
+            <Text className="text-4xl font-bold relative bottom-[60] left-8 text-white ">{peopleDetails?.name}</Text>
             {/* wrap inside hide show */}
             <Text className="mx-5 text-xl">Biography</Text>
             <View className="flex flex-row flex-wrap">
@@ -62,7 +63,7 @@ const Wrapper = ({show, text})=>{
             </View>
         </SafeAreaView>
     </View>
-  </ScrollView>;
+  </Animated.ScrollView>;
 };
 
 export default CastDetailsScreen;
