@@ -1,11 +1,13 @@
-import React, {useEffect, createContext, useState, useContext} from "react";
+import React, { useEffect, createContext, useState, useContext } from "react";
 import { StatusBar } from "expo-status-bar";
-import { NavigationContainer, useNavigationContainerRef  } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  useNavigationContainerRef,
+} from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "./HomeScreen";
 import Trending from "./Tending";
 import SearchScreen from "./SearchScreen";
-
 // Added imports
 import { Search, Home } from "lucide-react-native";
 import { Flame } from "lucide-react-native";
@@ -13,17 +15,20 @@ import { createStackNavigator } from "@react-navigation/stack";
 import MovieDetails from "../screens/MovieDetails";
 import CastDetailsScreen from "../screens/CastDetailsScreen";
 import VideoPlayer from "../components/VideoPlayer";
-import PlaceHolder from '../components/PlaceHolder'
+import PlaceHolder from "../components/PlaceHolder";
 import "react-native-reanimated";
 import "react-native-gesture-handler";
 import LoginScreen from "./LoginScreen";
-import DetailsViewPage from './DetailsViewPage'
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { NavigationContainerRef } from '@react-navigation/native';
+import DetailsViewPage from "./DetailsViewPage";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import ProfileScreen from "./ProfileScreen";
+import { AuthContext } from "../components/context/AuthContext";
+import { ActivityIndicator, View } from "react-native";
+
 // screens navigator
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
-const AuthContext = createContext();
+const Drawer = createDrawerNavigator();
 const BottomNavigator = () => {
   return (
     <Tab.Navigator
@@ -46,9 +51,7 @@ const BottomNavigator = () => {
           tabBarActiveTintColor: "black",
           tabBarShowLabel: false,
           tabBarIcon: ({ size, focused, color }) => {
-            return (
-              <Home size={30} color={focused ? "#6936f5" : "black"} />
-            );
+            return <Home size={30} color={focused ? "#6936f5" : "black"} />;
           },
         }}
       />
@@ -72,6 +75,7 @@ const BottomNavigator = () => {
           headerShown: true,
           tabBarActiveTintColor: "#6936f5",
           tabBarShowLabel: false,
+          presentation: "modal",
           tabBarIcon: ({ size, focused, color }) => {
             return <Flame size={30} color={focused ? "#6936f5" : "black"} />;
           },
@@ -81,57 +85,57 @@ const BottomNavigator = () => {
   );
 };
 
-
-const Navigator = () => {
-  const [loading, setLoading] = useState(false);
-  const [authToken, setAuthToken] = useState();
-  const [isSignedIn, setisSignedIn] = useState(false);
-  const [loginToken, setloginToken] = useState(null);
-
-  const NavigationContainerRef = React.createRef();
-
-  useEffect(() => {
-    const checkToken = async () => {
-      try {
-        const storedToken = await AsyncStorage.getItem("authToken");
-        const login = await AsyncStorage.getItem('keepLoggedIn');
-
-        setAuthToken(storedToken);
-        setloginToken(login);
-      } catch (error) {
-        console.error('Error checking token:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    checkToken();
-  }, []);
+const AfterLogin = () => {
   return (
-    <AuthContext.Provider value={{ loading, setLoading, isSignedIn, setisSignedIn }}>
-      <NavigationContainer ref={NavigationContainerRef}>
-         <Stack.Navigator
-            screenOptions={{
-              headerShown: false,
-            }}
-          >
-            {
-              (isSignedIn) ? 
-              <>
-              <Stack.Screen name="HomeScreen" component={BottomNavigator} />
-             <Stack.Screen name="Movie Details" component={MovieDetails} />
-            <Stack.Screen name="People Details" component={CastDetailsScreen} />
-            <Stack.Screen name="Video Player" component={VideoPlayer} />
-            <Stack.Screen name="PlaceHolder" component={PlaceHolder} />
-            <Stack.Screen name="Details View" component={DetailsViewPage} />
-              </>
-             :
-             <Stack.Screen name="Login" component={LoginScreen} />
-            }
-          </Stack.Navigator>
-      </NavigationContainer>
-      </AuthContext.Provider>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="HomeScreen" component={BottomNavigator} />
+      <Stack.Screen name="Movie Details" component={MovieDetails} />
+      <Stack.Screen name="People Details" component={CastDetailsScreen} />
+      <Stack.Screen name="Video Player" component={VideoPlayer} />
+      <Stack.Screen name="PlaceHolder" component={PlaceHolder} />
+      <Stack.Screen name="Details View" component={DetailsViewPage} />
+    </Stack.Navigator>
   );
 };
-export {AuthContext};
+
+const DrawerNav = () => {
+  return (
+    <Drawer.Navigator>
+      <Drawer.Screen
+        name="Home"
+        component={AfterLogin}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Drawer.Screen name="WatchList" component={ProfileScreen} />
+    </Drawer.Navigator>
+  );
+};
+const FirstAuth = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Login" component={LoginScreen} />
+    </Stack.Navigator>
+  );
+};
+const Navigator = () => {
+  const { loading, userToken } = useContext(AuthContext);
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size={"large"} />
+      </View>
+    );
+  }
+  return (
+    <NavigationContainer>
+      {userToken != null ? <DrawerNav /> : <FirstAuth />}
+    </NavigationContainer>
+  );
+};
 export default Navigator;

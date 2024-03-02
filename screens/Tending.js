@@ -11,7 +11,7 @@ import {
 import { useContext } from "react";
 // added dependencies
 import axios from "axios";
-import { AuthContext } from "../screens/Navigator";
+import { AuthContext } from "../components/context/AuthContext";
 import HorizontalMoviesData from "../components/HorizontalMoviesData";
 import Ionicons from "@expo/vector-icons/Ionicons";
 const apiUrl = process.env.EXPO_PUBLIC_API_URL
@@ -26,7 +26,6 @@ const Trending = ({navigation}) => {
   // for popular movies
   const getPopularMovies = async () => {
     try {
-      setLoading(true);
       const res = await axios.get(apiUrl+`trending/movie/day?language=en-US`, {
         headers:{
           accept: "application/json",
@@ -34,9 +33,7 @@ const Trending = ({navigation}) => {
         }
       });
       await setPopularMovies(res?.data?.results);
-      setLoading(false);
     } catch (error) {
-      setLoading(false);
       console.log(error)
     }
   };
@@ -44,7 +41,6 @@ const Trending = ({navigation}) => {
   // for popular series
   const getPopularTvSeries = async () => {
     try {
-      setLoading(true);
       const res = await axios.get(
         apiUrl+`tv/popular?language=en-US&page=2`,
         {
@@ -56,16 +52,13 @@ const Trending = ({navigation}) => {
       );
       await settrendingSeries(res?.data?.results);
       console.log(trendingSeries);
-      setLoading(false);
     } catch (error) {
-      setLoading(false);
     }
   };
 
 
   const getArivingSoonData = async()=>{
     try {
-      setLoading(true);
       const res = await axios.get(apiUrl+`tv/on_the_air?language=en-US&page=1`, {
         headers:{
           accept: "application/json",
@@ -73,12 +66,9 @@ const Trending = ({navigation}) => {
         }
       })
       await setarrivingSoon(res?.data?.results);
-      setLoading(false);
     } catch (error) {
       console.log(error);
-      setLoading(false);
     }finally{
-      setLoading(false);
     }
   }
 
@@ -86,7 +76,6 @@ const Trending = ({navigation}) => {
   // top rated
   const getTopRated  = async()=>{
     try {
-      setLoading(true);
       const res = await axios.get(apiUrl+`tv/top_rated?language=en-US&page=1`, {
         headers:{
           accept: "application/json",
@@ -94,9 +83,7 @@ const Trending = ({navigation}) => {
         }
       })
       await settopRated(res?.data?.results);
-      setLoading(false);
     } catch (error) {
-      setLoading(false);
       console.log(error)
     }
   }
