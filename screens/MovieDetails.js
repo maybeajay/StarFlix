@@ -11,7 +11,7 @@ import {
   StyleSheet,
   Alert
 } from "react-native";
-import { AuthContext } from "../screens/Navigator";
+import { AuthContext } from "../components/context/AuthContext";
 
 // added dependecies
 import { imageUrl } from "../constant";
@@ -51,13 +51,10 @@ const MovieDetails = ({ route, navigation }) => {
     media == "movie" ? `movie/${id}?language=en-US` : `tv/${id}?language=en-US`;
   const getDetailsById = async () => {
     try {
-      setLoading(true);
       const res = await axios.get(apiUrl+`${finalUrl}`, Headers);
       await setmovieDetails(res?.data);
-      setLoading(false);
       console.log(res?.data);
     } catch (error) {
-      setLoading(false);
       console.log(error);
     }
   };
@@ -69,7 +66,6 @@ const MovieDetails = ({ route, navigation }) => {
 
   const getRecomendedShows = async () => {
     try {
-      setLoading(true);
       const res = await axios.get(
         apiUrl+`${recomendedUrl}`,
         {
@@ -80,9 +76,8 @@ const MovieDetails = ({ route, navigation }) => {
         }
       );
       await setrecomendedShows(res?.data?.results);
-      setLoading(false);
     } catch (error) {
-      setLoading(false);
+      
     }
   };
 
@@ -107,7 +102,6 @@ const MovieDetails = ({ route, navigation }) => {
   console.log(credsUrl);
   const getCrewDetails = async () => {
     try {
-      setLoading(true);
       const res = await axios.get(apiUrl+`${credsUrl}`, {
         headers: {
           accept: "application/json",
@@ -115,10 +109,8 @@ const MovieDetails = ({ route, navigation }) => {
         },
       });
       await setCrew(res?.data?.cast);
-      setLoading(false);
       console.log("crew", crew);
     } catch (error) {
-      setLoading(fasle);
       console.log(error);
     }
   };

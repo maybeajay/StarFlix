@@ -3,7 +3,7 @@ import { View, Text, Image, TouchableOpacity, TextInput } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import {SendHorizontal} from 'lucide-react-native'
 import { imageUrl } from "../constant";
-import { AsyncStorage } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const UserReviews = ({ data }) => {
   const [expandedIndices, setExpandedIndices] = useState([]);
   const [reviewText, setreviewText] = useState('');
