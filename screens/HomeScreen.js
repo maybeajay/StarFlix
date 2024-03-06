@@ -1,15 +1,10 @@
 import {
   View,
   Text,
-  SafeAreaView,
   ScrollView,
   Image,
-  FlatList,
-  TouchableOpacity,
-  Dimensions,
-  Alert
 } from "react-native";
-import React, { useCallback, useContext, useState, useEffect } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import {AuthContext} from '../components/context/AuthContext'
 // added imports
@@ -18,11 +13,10 @@ import axios from "axios";
 import HorizontalMoviesData from '../components/HorizontalMoviesData'
 import { Skeleton } from 'moti/skeleton'
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import SkeletonLoader from "expo-skeleton-loader";
 import CardLoader from "../common/CardLoader";
 import Animated, { useSharedValue } from "react-native-reanimated";
-import {EXPO_PUBLIC_API_URL,EXPO_PUBLIC_ACESS_TOKEN } from '@env'
+import {EXPO_PUBLIC_API_URL, EXPO_TEST_TOKEN } from '@env'
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [upcomingMovies, setupcomingMovies] = useState([]);
@@ -36,13 +30,13 @@ const HomeScreen = () => {
   const Headers = {
     headers: {
       accept: "application/json",
-      Authorization: EXPO_PUBLIC_ACESS_TOKEN,
+      Authorization: EXPO_TEST_TOKEN,
     },
   }
+  console.log("TOKENN", EXPO_TEST_TOKEN);
   const getupMoviesDetails = async () => {
     try {
-      const res = await axios.get(`${EXPO_PUBLIC_API_URL}movie/upcoming?language=en-US&page=1`,Headers);
-      console.log(res?.data?.results);
+      const res = await axios.get(`${EXPO_PUBLIC_API_URL}movie/upcoming?language=en-US&page=1`, Headers);
       await setupcomingMovies(res?.data?.results);
     } catch (error) {
       console.log(error);
@@ -123,11 +117,8 @@ const HomeScreen = () => {
         <CardLoader times={avatarData}/>
       </SkeletonLoader> :
       <>
-        <Animated.View className="mt-10">
-        <Text className="mx-5 text-xl mt-3">Movies on the way!</Text>
-        <TouchableOpacity onPress={()=>Logout()}>
-        <Text>Logout</Text>
-      </TouchableOpacity>
+        <Animated.View className="mt-2">
+        <Text className="mx-5 text-xl mt-5 mb-4">Movies on the way!</Text>
           <Animated.FlatList
             data={upcomingMovies}
             horizontal
@@ -152,8 +143,6 @@ const HomeScreen = () => {
             )}
           />
       </Animated.View>
-      <Text>CHECKKKKKKKKK</Text>
-      <Text>{process.env.EXPO_PUBLIC_API_URL}</Text>
       <View className="mt-10"> 
           <Text className="mx-5 text-xl font-semibold mb-5">Tv Shows Arriving Today!</Text>
           <HorizontalMoviesData data={arrivingToday} navigation={navigation} media={"tv"}/>

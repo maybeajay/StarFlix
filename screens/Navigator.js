@@ -2,6 +2,7 @@ import React, { useEffect, createContext, useState, useContext } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
   NavigationContainer,
+  getFocusedRouteNameFromRoute,
   useNavigationContainerRef,
 } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -92,7 +93,10 @@ const AfterLogin = () => {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="HomeScreen" component={BottomNavigator} />
+      <Stack.Screen name="HomeScreen" component={BottomNavigator} 
+       options={({ route }) => ({
+        headerShown: route.state?.index === 0
+      })}/>
       <Stack.Screen name="Movie Details" component={MovieDetails} />
       <Stack.Screen name="People Details" component={CastDetailsScreen} />
       <Stack.Screen name="Video Player" component={VideoPlayer} />
@@ -108,9 +112,9 @@ const DrawerNav = () => {
       <Drawer.Screen
         name="Home"
         component={AfterLogin}
-        options={{
-          headerShown: false,
-        }}
+        options={({ route }) => ({
+          headerShown: getFocusedRouteNameFromRoute(route) === 'Search', // Show header only on the home screen
+        })}
       />
       <Drawer.Screen name="WatchList" component={ProfileScreen} />
     </Drawer.Navigator>
@@ -118,7 +122,9 @@ const DrawerNav = () => {
 };
 const FirstAuth = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{
+      headerShown: false
+    }}>
       <Stack.Screen name="Login" component={LoginScreen} />
     </Stack.Navigator>
   );

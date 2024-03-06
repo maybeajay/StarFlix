@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Alert, TextInput } from "react-native";
+import { Alert, Linking, TextInput } from "react-native";
 import {
   View,
   Text,
@@ -22,7 +22,7 @@ const LoginScreen = () => {
   const [state, setState] = useState();
   const auth = FIREBAE_AUTH;
   const [userData, setuserData] = useState({
-    email: "",
+    username: "",
     password: "",
   });
   // const [state, setState] = useState()
@@ -73,12 +73,10 @@ const LoginScreen = () => {
   const handleChange = (name, value) => {
     setuserData({ ...userData, [name]: value });
     switch (name) {
-      case "email":
+      case "username":
         setemailError(
-          !emailRegex.test(value)
-            ? "Email is not valid"
-            : value == null || value == ""
-            ? "Email is required"
+             value == null || value == ""
+            ? "Username is required"
             : null
         );
         break;
@@ -91,20 +89,20 @@ const LoginScreen = () => {
         break;
     }
   };
-  const handleLogin = async () => {
-    // if (!emailRegex.test(userData.email)) {
-    //   setemailError("Email is not valid");
-    // }
-    // if (userData.email == "" || userData.email == null) {
-    //   setemailError("Email is required*");
-    // }
-    // if (userData.password == "" || userData.password == null) {
-    //   setpassError("Password is required*");
-    // }
-     await AsyncStorage.setItem("authToken", "adsasdasdsdadsad");
-     await AsyncStorage.setItem("keeploogedin", "true");
-  };
 
+  const handleLogin = ()=>{
+    if(userData.username ==null || userData.username==""){
+      setemailError("username is required");
+      return ;
+    }
+    if(userData.password == null || userData.password == ''){
+      setpassError("Password is required");
+      return ;
+    }
+    if(!emailError && !passError){
+      Login(userData);
+    }
+  }
   return (
     <SafeAreaView
       style={{
@@ -114,17 +112,17 @@ const LoginScreen = () => {
         height: "100%",
       }}
     >
-      <Text className="text-4xl font-bold text-white mt-[10vh]">
+      <Text className="text-4xl font-bold text-indigo-500 mt-[10vh]">
         Lets Get You Started
       </Text>
       <View className="flex flex-col justify-center items-center w-full h-4/5">
         <TextInput
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-gray-700 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 w-[80%]"
-          placeholder="john@gmail.com"
+          placeholder="Username"
           value={userData.email}
-          onChangeText={(text) => handleChange("email", text)}
+          onChangeText={(text) => handleChange("username", text)}
         />
-        {emailError && <Text className="text-white">{emailError}</Text>}
+        {emailError && <Text className="text-red-500">{emailError}</Text>}
         <TextInput
           secureTextEntry={true}
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 w-[80%] mt-10"
@@ -132,20 +130,18 @@ const LoginScreen = () => {
           onChangeText={(text) => handleChange("password", text)}
           value={userData.password}
         />
-        {passError && <Text className="text-white ">{passError}</Text>}
+        {passError && <Text className="text-red-500 ">{passError}</Text>}
         <TouchableOpacity className="w-80 h-10 bg-white mt-6 rounded-xl flex justify-center">
-          <Text className="text-center" onPress={() => Login()}>
+          <Text className="text-center" onPress={() => handleLogin()}>
             Login
           </Text>
         </TouchableOpacity>
 
-        <View className="mt-5">
-          <Text>OR</Text>
-          {/* <GoogleSigninButton
-            size={GoogleSigninButton.Size.Wide}
-            color={GoogleSigninButton.Color.Dark}
-            onPress={()=>handleGoogleLogin()}
-          /> */}
+        <View className="mt-5 flex justify-center">
+          <Text className="text-blue-500 text-center">Don't have an TMDB Account yet?</Text>
+          <TouchableOpacity onPress={()=>Linking.openURL("https://www.themoviedb.org/signup")} className="w-80 h-10 mt-6 rounded-xl flex justify-center bg-indigo-500">
+            <Text className="text-center text-white">Create one</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>

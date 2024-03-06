@@ -29,7 +29,8 @@ const VideoPlayer = ({ route }) => {
       const tempData = await res?.data?.results?.filter(
         (item) => item.type === "Trailer" || item.type === "Teaser"
       );
-  
+
+      console.log(tempData);
       setvideoDetails(tempData);
     } catch (error) {
       

@@ -5,8 +5,7 @@ import { ScrollView, SafeAreaView, View, Text, Image } from "react-native";
 
 import { imageUrl } from "../constant";
 import Animated from "react-native-reanimated";
-const apiUrl = process.env.EXPO_PUBLIC_API_URL
-const ACCESS_TOKEN = process.env.EXPO_PUBLIC_ACESS_TOKEN;
+import {EXPO_PUBLIC_API_URL, EXPO_TEST_TOKEN } from '@env'
 const CastDetailsScreen = ({navigation, route}) => {
   const [peopleDetails, setpeopleDetails] = useState([]);
   const {id} = route?.params;
@@ -16,15 +15,14 @@ const CastDetailsScreen = ({navigation, route}) => {
   const getCastDetailsById = async () => {
     try {
       const res = await axios.get(
-        apiUrl+`person/${id}?language=en-US`,
+        EXPO_PUBLIC_API_URL+`person/${id}?language=en-US`,
         {
           headers: {
             accept: "application/json",
-            Authorization: ACCESS_TOKEN,
+            Authorization: EXPO_TEST_TOKEN,
           },
         }
       );
-      console.log("casttt",res?.data);
       await setpeopleDetails(res?.data)
     } catch (error) {
         console.log(error);

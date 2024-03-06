@@ -5,7 +5,6 @@ const DetailsViewPage = ({route}) => {
     const [trendingMovies, setTrendingMovies] = useState([])
     
     // getting movies to full page
-    console.log(route?.params)
     return (
         <SafeAreaView>
             <View className="flex flex-1">
