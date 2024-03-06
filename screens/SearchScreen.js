@@ -15,9 +15,7 @@ import { Search } from "lucide-react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import { imageUrl } from "../constant";
-const apiUrl = process.env.EXPO_PUBLIC_API_URL
-const ACCESS_TOKEN = process.env.EXPO_PUBLIC_ACESS_TOKEN;
-
+import {EXPO_PUBLIC_API_URL, EXPO_TEST_TOKEN } from '@env'
 
 // added imports
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -32,18 +30,16 @@ const SearchScreen = ({navigation}) => {
   const getSearchResult = async () => {
     try {
       const res = await axios.get(
-        apiUrl+`search/multi?query=${query}&include_adult=false&language=en-US&page=1`,
+        EXPO_PUBLIC_API_URL+`search/multi?query=${query}&include_adult=false&language=en-US&page=1`,
         {
           headers: {
             accept: "application/json",
-            Authorization: ACCESS_TOKEN,
+            Authorization: EXPO_TEST_TOKEN,
           },
         }
       );
-      console.log(res?.data?.results)
       const tempSearch = [...res?.data?.results]?.filter((item)=>item.backdrop_path);
       setsearchMovies(tempSearch);
-      // console.log(res?.data);
     } catch (error) {
       console.log(error);
     }
@@ -52,20 +48,15 @@ const SearchScreen = ({navigation}) => {
   // get genre id and label
   const getGenre = async () => {
     try {
-      const res = await axios.get(apiUrl+`genre/movie/list?language=en`, {
+      const res = await axios.get(EXPO_PUBLIC_API_URL+`genre/movie/list?language=en`, {
         headers: {
           accept: "application/json",
-          Authorization: ACCESS_TOKEN,
+          Authorization: EXPO_TEST_TOKEN,
         },
       });
-      // console.log("rrrrrrrrrrrrr",res);
       await setGenres(res?.data?.genres);
     } catch (error) {}
   };
-
-
-  // handling navigating to details page
-  console.log(searchMovies)
 
   const handleDetailPageNavigation = (id)=>{
     navigation.navigate("Movie Details", {id: id, media: searchMovies[0]?.media_type});
@@ -74,7 +65,6 @@ const SearchScreen = ({navigation}) => {
   // get label from id
   const getGenreLabelFromId = async (idArray)=>{
   const newGenres = genres?.filter((item) => idArray.includes(item?.id));
-  console.log("Filtered Genres:", newGenres);
   setGenre(newGenres);
   }
 

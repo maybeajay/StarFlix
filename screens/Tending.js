@@ -14,8 +14,7 @@ import axios from "axios";
 import { AuthContext } from "../components/context/AuthContext";
 import HorizontalMoviesData from "../components/HorizontalMoviesData";
 import Ionicons from "@expo/vector-icons/Ionicons";
-const apiUrl = process.env.EXPO_PUBLIC_API_URL
-const ACCESS_TOKEN = process.env.EXPO_PUBLIC_ACESS_TOKEN;
+import {EXPO_PUBLIC_API_URL, EXPO_TEST_TOKEN } from '@env'
 const Trending = ({navigation}) => {
   const [popularMovies, setPopularMovies] = useState([]);
   const [trendingSeries, settrendingSeries] = useState([]);
@@ -26,10 +25,10 @@ const Trending = ({navigation}) => {
   // for popular movies
   const getPopularMovies = async () => {
     try {
-      const res = await axios.get(apiUrl+`trending/movie/day?language=en-US`, {
+      const res = await axios.get(EXPO_PUBLIC_API_URL+`trending/movie/day?language=en-US`, {
         headers:{
           accept: "application/json",
-          Authorization: ACCESS_TOKEN,
+          Authorization: EXPO_TEST_TOKEN,
         }
       });
       await setPopularMovies(res?.data?.results);
@@ -42,16 +41,15 @@ const Trending = ({navigation}) => {
   const getPopularTvSeries = async () => {
     try {
       const res = await axios.get(
-        apiUrl+`tv/popular?language=en-US&page=2`,
+        EXPO_PUBLIC_API_URL+`tv/popular?language=en-US&page=2`,
         {
           headers: {
             accept: "application/json",
-            Authorization: ACCESS_TOKEN,
+            Authorization: EXPO_TEST_TOKEN,
           },
         }
       );
       await settrendingSeries(res?.data?.results);
-      console.log(trendingSeries);
     } catch (error) {
     }
   };
@@ -59,10 +57,10 @@ const Trending = ({navigation}) => {
 
   const getArivingSoonData = async()=>{
     try {
-      const res = await axios.get(apiUrl+`tv/on_the_air?language=en-US&page=1`, {
+      const res = await axios.get(EXPO_PUBLIC_API_URL+`tv/on_the_air?language=en-US&page=1`, {
         headers:{
           accept: "application/json",
-          Authorization: ACCESS_TOKEN
+          Authorization: EXPO_TEST_TOKEN
         }
       })
       await setarrivingSoon(res?.data?.results);
@@ -76,10 +74,10 @@ const Trending = ({navigation}) => {
   // top rated
   const getTopRated  = async()=>{
     try {
-      const res = await axios.get(apiUrl+`tv/top_rated?language=en-US&page=1`, {
+      const res = await axios.get(EXPO_PUBLIC_API_URL+`tv/top_rated?language=en-US&page=1`, {
         headers:{
           accept: "application/json",
-          Authorization: ACCESS_TOKEN,
+          Authorization: EXPO_TEST_TOKEN,
         }
       })
       await settopRated(res?.data?.results);
