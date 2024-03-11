@@ -243,7 +243,7 @@ const [isShown, setShown] = useState(false);
                       media: media,
                     })
                   }
-                  className="flex flex-row items-center bg-[#6936f5] p-3 h-full"
+                  className="flex flex-row items-center bg-[#6936f5] p-3 h-full"x
                   style={{
                     borderBottomLeftRadius: 40,
                     borderTopLeftRadius: 40,

@@ -94,9 +94,9 @@ const SearchScreen = ({navigation}) => {
               flexDirection: "row",
               alignItems: "center",
               marginLeft: "auto",
-              width: "80%",
+              width: "90%",
               marginRight: "auto",
-              marginTop: 50,
+              marginTop: 20
             }}
             className="bg-gray-60 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2"
           >

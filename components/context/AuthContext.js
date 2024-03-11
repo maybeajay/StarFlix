@@ -34,7 +34,6 @@ export const AuthProvider = ({children})=>{
         console.log("DATAAAA", data)
         setLoading(true);
         try {
-            console.log("Try")
             const res = await axios.post(`${EXPO_PUBLIC_API_URL}authentication/token/validate_with_login`, data, Headers);
             if(res?.data?.success == true){
             await AsyncStorage.setItem("userToken", res?.data?.request_token)

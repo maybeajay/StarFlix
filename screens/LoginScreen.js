@@ -127,8 +127,9 @@ const LoginScreen = () => {
           secureTextEntry={true}
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 w-[80%] mt-10"
           placeholder="Password"
-          onChangeText={(text) => handleChange("password", text)}
           value={userData.password}
+          onChangeText={(text) => handleChange("password", text)}
+          
         />
         {passError && <Text className="text-red-500 ">{passError}</Text>}
         <TouchableOpacity className="w-80 h-10 bg-white mt-6 rounded-xl flex justify-center">
