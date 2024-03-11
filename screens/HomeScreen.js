@@ -60,7 +60,7 @@ const HomeScreen = () => {
   // now playing in India
   const nowPlaying = async ()=>{
     try {
-      const res = await axios.get(`${EXPO_PUBLIC_API_URL}movie/now_playing?language=en-US&page=1&region=US`, Headers);
+      const res = await axios.get(`${EXPO_PUBLIC_API_URL}movie/now_playing?language=en-US&page=1&region=IN`, Headers);
       console.log("RSSSS",res);
       await setnowplayingData(res?.data?.results);
     } catch (error) {

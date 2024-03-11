@@ -26,7 +26,7 @@ const HorizontalMoviesData = ({data, navigation, media}) => {
                 >
                 <Image
                   source={{ uri: `${imageUrl}${item?.poster_path}` }}
-                  style={{ width: 170, height: 215, resizeMode: "contain"}}
+                  style={{ width: 200, height: 260, resizeMode: "contain"}}
                 />
                 </Pressable>
                 <View style={{
@@ -39,7 +39,7 @@ const HorizontalMoviesData = ({data, navigation, media}) => {
                 }}
                 >
                   <View className="flex flex-row items-star justify-between">
-                  <Text className="text-white mx-3 text-md mt-2">{item?.title ? item?.title.slice(0, 7) : item?.name.slice(0, 15)}</Text>
+                  <Text className="text-white mx-3 text-md mt-2">{item?.title ? item?.title : item?.name}</Text>
                   <Text className="bg-transparent text-white mt-2 text-md">
                     {Math.round(item?.vote_average*10)/10}
                   </Text>

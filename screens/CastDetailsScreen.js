@@ -1,18 +1,22 @@
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import React, { useCallback, useState } from "react";
-import { ScrollView, SafeAreaView, View, Text, Image } from "react-native";
+import { ScrollView, SafeAreaView, View, Text, Image, Dimensions } from "react-native";
 
 import { imageUrl } from "../constant";
-import Animated from "react-native-reanimated";
+import Animated, {FadeInLeft, FadeOutRight} from "react-native-reanimated";
 import {EXPO_PUBLIC_API_URL, EXPO_TEST_TOKEN } from '@env'
 import {  Ionicons } from '@expo/vector-icons';
 import { Cake, BarChart } from "lucide-react-native";
-import HorizontalMoviesData from "../components/HorizontalMoviesData";
+import HorizontalCarousel from "../components/HorizontalCarousel";
+import { FlatList } from "react-native-gesture-handler";
+const PAGE_WIDTH = Dimensions.get("screen").width;
 const CastDetailsScreen = ({navigation, route}) => {
   const [peopleDetails, setpeopleDetails] = useState([]);
   const [creditsDetails, setcreditsDetails] = useState([]);
+  const [images, setimages] = useState([]);
   const {id} = route?.params;
+  const navigate = useNavigation();
 
   // get cast details by id
   const Headers = {
@@ -37,7 +41,19 @@ const CastDetailsScreen = ({navigation, route}) => {
   const getCombinedCredits = async()=>{
     try {
       const res = await axios.get(`${EXPO_PUBLIC_API_URL}person/${id}/combined_credits?language=en-US`, Headers);
-      setcreditsDetails(res?.data?.cast);
+      console.log("RES222222", res);
+      let tempData = await res?.data?.cast?.filter((item)=>item?.backdrop_path);
+      setcreditsDetails(tempData);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const getPeopleImages = async()=>{
+    try {
+      const res = await axios.get(`${EXPO_PUBLIC_API_URL}person/${id}}/images`, Headers);
+      console.log("RESSSSS",res);
+      await setimages(res?.data?.profiles);
     } catch (error) {
       console.log(error);
     }
@@ -47,6 +63,7 @@ const CastDetailsScreen = ({navigation, route}) => {
 useFocusEffect(useCallback(()=>{
     getCastDetailsById();
     getCombinedCredits();
+    getPeopleImages();
 }, [id]))
 
 
@@ -56,19 +73,30 @@ const Wrapper = ({show, text})=>{
 }
   return <Animated.ScrollView showsVerticalScrollIndicator={false} sharedTransitionTag="sharedTagsss">
     {/* images and stuff */}
-    <View>
-        <Animated.Image source={{uri: imageUrl+peopleDetails?.profile_path}}
-        style={{
-            width:"100%",
-            resizeMode: 'cover',
-            height: 400,
-            borderBottomLeftRadius: 30,
-            borderBottomRightRadius: 30
-        }}
+    <Animated.View entering={FadeInLeft} exiting={FadeOutRight}>
+        <FlatList 
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        data={images}
+        renderItem={({ item }) => (
+          <>
+          {console.log("IIIIIIIII",item)}
+          <Animated.Image source={{uri: imageUrl+item?.file_path}}
+          style={{
+              width: PAGE_WIDTH,
+              resizeMode: 'cover',
+              height: 400,
+              borderBottomLeftRadius: 30,
+              borderBottomRightRadius: 30
+          }}
+          />
+          </>
+        )
+        }
         />
         {/* for name and stuff */}
         <SafeAreaView className="">
-            <Text className="text-4xl font-bold relative bottom-[60] left-8 text-white ">{peopleDetails?.name}</Text>
+            <Text className="text-3xl font-bold relativ mb-8 text-center mt-5 text-[#6936f5] opacity-[0.8]">{peopleDetails?.name}</Text>
 
             {/* for birthday */}
             <View className="flex flex-row items-center gap-1  bottom-5 justify-around">
@@ -93,11 +121,11 @@ const Wrapper = ({show, text})=>{
             <View className="mx-5">
               <Text className="text-xl font-semibold">FilmoGraphy</Text>
               <View className="mt-5">
-              <HorizontalMoviesData data={creditsDetails} navigation={navigation} media={creditsDetails?.media_type}/>
+              <HorizontalCarousel check={creditsDetails} navigate={navigate}/>
               </View>
             </View>
         </SafeAreaView>
-    </View>
+    </Animated.View>
   </Animated.ScrollView>;
 };
 

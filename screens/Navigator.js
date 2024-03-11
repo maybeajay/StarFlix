@@ -32,6 +32,7 @@ import { ImageBackground, Image,
   TouchableOpacity,
   StyleSheet,
   Switch, Text, } from "react-native";
+import HorizontalCarousel from "../components/HorizontalCarousel";
 
 // screens navigator
 const Tab = createBottomTabNavigator();
