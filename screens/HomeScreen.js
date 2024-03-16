@@ -117,7 +117,7 @@ const HomeScreen = () => {
         <CardLoader times={avatarData}/>
       </SkeletonLoader> :
       <>
-        <Animated.View className="mt-2">
+        <Animated.View className="mt-20">
         <Text className="mx-5 text-xl mt-5 mb-4">Movies on the way!</Text>
           <Animated.FlatList
             data={upcomingMovies}

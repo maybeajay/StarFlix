@@ -214,6 +214,7 @@ const DrawerNav = () => {
         component={AfterLogin}
         options={({  }) => ({
           headerShown: true,
+          headerTransparent: true,
           drawerIcon: ({focused}) =>{
             return <Home size={30} color= {focused ? "#6936f5" : "black"}/>
           }
