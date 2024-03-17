@@ -96,7 +96,7 @@ const Trending = ({navigation}) => {
   );
   return(
     <SafeAreaView className="bg-white flex-1">
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} className='mt-[10vh]'>
         <View className="flex flex-row justify-between w-full mt-5">
         <Text className="color-[#0D111f] text-lg mx-3 mb-2 mt-4">Trending Movies!</Text>
         <TouchableOpacity onPress={()=>navigation.navigate("Details View",{media: "movie"})}>

@@ -45,7 +45,7 @@ const UserReviews = ({ data }) => {
                   style={{ marginRight: 5 }}
                 />
               )}
-              <Text>{item?.author_details?.username}</Text>
+              <Text style={{fontFamily: "Poppins_500Medium"}}>{item?.author_details?.username}</Text>
             </View>
             <View className="flex flex-row mt-2 items-center">
               <Ionicons
@@ -58,9 +58,9 @@ const UserReviews = ({ data }) => {
             </View>
             <View classname="flex flex-row">
               {expandedIndices.includes(index) ? (
-                <Text classname="mx-5 text-md">{item?.content}</Text>
+                <Text classname="mx-5 text-md" style={{fontFamily: "Sarala_400Regular", lineHeight: 18}}>{item?.content}</Text>
               ) : (
-                <Text classname="mx-5 text-md">
+                <Text classname="mx-5 text-md" style={{fontFamily: "Sarala_400Regular", lineHeight: 18}}>
                   {item?.content?.slice(0, 250)}.....
                 </Text>
               )}
@@ -80,7 +80,7 @@ const UserReviews = ({ data }) => {
         ))}
       {/* your review section */}
       <View className="mt-5">
-        <Text className="mx-5 font-bold text-xl">Post your review</Text>
+        <Text className="mx-5 font-bold text-xl" style={{fontFamily: "Prompt_600SemiBold"}}>Post your review</Text>
         <TextInput onTextInput={(text) => setreviewText(text)}
           className="w-4/5 rounded-md h-10 mx-auto mt-3 p-2"
           style={{

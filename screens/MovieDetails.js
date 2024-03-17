@@ -96,7 +96,6 @@ const MovieDetails = ({ route, navigation }) => {
   const addToWatchList = async(mediaType, mediaId, )=>{
     try {
       const res = await axios.post(`${EXPO_PUBLIC_API_URL}account/sometester/watchlist`, {media_type:mediaType , media_id: mediaId, watchlist:true}, Headers,);
-      await console.log(res?.data);
       if(res?.data?.success == true){
         if (Platform.OS === 'android') {
           ToastAndroid.show("Added to watchlist", ToastAndroid.SHORT)
@@ -282,7 +281,7 @@ const [isShown, setShown] = useState(false);
                 {movieDetails &&
                   movieDetails?.genres?.map((item) => (
                     <Animated.View entering={FadeInLeft} exiting={FadeOutRight}>
-                      <Text className="text-md text-[#28303d]">
+                      <Text className="text-md text-[#28303d] font-medium" style={{fontFamily: "Ubuntu_400Regular"}}>
                         {item?.name} .
                       </Text>
                     </Animated.View>
@@ -290,7 +289,7 @@ const [isShown, setShown] = useState(false);
               </View>
               {media == "tv" ? (
                 <View className="mx-auto">
-                  <Text>{movieDetails?.seasons?.length} Seasons</Text>
+                  <Text style={{fontFamily: "Ubuntu_400Regular"}}>{movieDetails?.seasons?.length} Seasons</Text>
                 </View>
               ) : null}
             </View>
@@ -302,6 +301,7 @@ const [isShown, setShown] = useState(false);
                 style={{
                   maxWidth: "80%",
                   fontSize: 23,
+                  fontFamily: "Poppins_500Medium"
                 }}
                 // className="font-bold"
               >
@@ -311,6 +311,8 @@ const [isShown, setShown] = useState(false);
                 className="mt-3 font-normal"
                 style={{
                   fontSize: 16,
+                  fontFamily: "Ubuntu_400Regular",
+                  lineHeight: 20
                 }}            >
                 {movieDetails?.overview}
               </AnimatedText>
@@ -388,12 +390,12 @@ const [isShown, setShown] = useState(false);
   
             {/* Reviews section */}
             <View className="mt-8">
-              <Text className="mx-5 font-bold text-xl">Reviews</Text>
+              <Text className="mx-5 font-bold text-xl" style={{fontFamily: "Prompt_600SemiBold"}}>Reviews</Text>
             <UserReviews data={userReviews}/>
             </View>
             {/* Recomended shows */}
             <View className="mt-8">
-              <Text className="mx-5 font-bold text-lg mb-3">
+              <Text className="mx-5 font-bold mb-3 text-xl" style={{fontFamily: "Prompt_600SemiBold"}}>
                 People also like
               </Text>
               <HorizontalMoviesData

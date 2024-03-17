@@ -54,7 +54,7 @@ function VerticalCarousel({data}) {
         pagingEnabled={false}
         scrollAnimationDuration={1500}
         onSnapToItem={(index) => console.log("current index:", index)}
-        renderItem={({ index, item }) => <View style={{ flex: 1, paddingRight: 25}} key={index}>
+        renderItem={({ index, item }) => <View style={{ flex: 1, paddingRight: 20}} key={index}>
         <Animated.View
           pointerEvents="none"
         >
@@ -66,8 +66,6 @@ function VerticalCarousel({data}) {
               width: PAGE_WIDTH,
               resizeMode: 'contain',
               height: PAGE_HEIGHT-300,
-              borderBottomLeftRadius: 60,
-              borderBottomRightRadius: 60,
             }}
             alt="title"
           />

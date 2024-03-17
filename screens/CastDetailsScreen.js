@@ -78,7 +78,7 @@ const Wrapper = ({show, text})=>{
         <VerticalCarousel data={images}/>
         {/* for name and stuff */}
         <SafeAreaView className="">
-            <Text className="text-3xl font-bold relativ mb-8 text-center mt-5 text-[#6936f5] opacity-[0.8]">{peopleDetails?.name}</Text>
+            <Text className="text-3xl font-bold relativ mb-8 text-center mt-5 text-[#6936f5] opacity-[0.8]" style={{fontFamily: "Prompt_600SemiBold"}}>{peopleDetails?.name}</Text>
 
             {/* for birthday */}
             <View className="flex flex-row items-center gap-1  bottom-5 justify-around">
@@ -98,10 +98,10 @@ const Wrapper = ({show, text})=>{
             {/* wrap inside hide show */}
             <Text className="mx-5 text-xl">Biography</Text>
             <View className="flex flex-row flex-wrap">
-            <Text className="text-md font-regular p-2 mt-3 mx-2">{peopleDetails?.biography}</Text>
+            <Text className="text-md font-regular p-2 mt-3 mx-2" style={{fontFamily: "Ubuntu_400Regular", lineHeight: 18}}>{peopleDetails?.biography}</Text>
             </View>
             <View className="mx-5">
-              <Text className="text-xl font-semibold">FilmoGraphy</Text>
+              <Text className="text-xl font-semibold" style={{fontFamily: "Prompt_600SemiBold", marginTop: 15}}>FilmoGraphy</Text>
               <View className="mt-5">
               <HorizontalCarousel check={creditsDetails} navigate={navigate}/>
               </View>

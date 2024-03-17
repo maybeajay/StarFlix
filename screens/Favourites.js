@@ -71,7 +71,7 @@ export default function Favourites({navigation}) {
 const styles = StyleSheet.create({
   container: {
     width: ScreenWidth,
-    height: ScreenHeight-100,
+    height: ScreenHeight-200,
     alignItems: 'center',
     padding: 15
   },

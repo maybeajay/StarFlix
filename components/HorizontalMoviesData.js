@@ -39,7 +39,7 @@ const HorizontalMoviesData = ({data, navigation, media}) => {
                 }}
                 >
                   <View className="flex flex-row items-star justify-between">
-                  <Text className="text-white mx-3 text-md mt-2">{item?.title ? item?.title : item?.name}</Text>
+                  <Text className="text-white mx-3 text-md mt-2" style={{fontFamily: "Prompt_600SemiBold"}}>{item?.title ? item?.title : item?.name}</Text>
                   <Text className="bg-transparent text-white mt-2 text-md">
                     {Math.round(item?.vote_average*10)/10}
                   </Text>
