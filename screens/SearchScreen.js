@@ -86,7 +86,7 @@ const SearchScreen = ({navigation}) => {
   }, [searchMovies]);
 
   return (
-      <SafeAreaView style={{ height: "100%" }}>
+      <SafeAreaView style={{ height: "100%"}} className="mt-[10vh]">
         <View classname="flex flex-row items-center">
           <View
             style={{

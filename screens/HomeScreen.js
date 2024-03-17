@@ -117,8 +117,8 @@ const HomeScreen = () => {
         <CardLoader times={avatarData}/>
       </SkeletonLoader> :
       <>
-        <Animated.View className="mt-2">
-        <Text className="mx-5 text-xl mt-5 mb-4">Movies on the way!</Text>
+        <Animated.View className="mt-20">
+        <Text className="mx-5 text-2xl mt-5 mb-4" style={{fontFamily: "Poppins_500Medium"}}>Movies on the way!</Text>
           <Animated.FlatList
             data={upcomingMovies}
             horizontal
@@ -136,7 +136,7 @@ const HomeScreen = () => {
               />
               </Skeleton>
               <Skeleton width={10} height={10} colorMode="light">
-              <Text className="font-semibold max-w-[90px] space-x-2 mt-2">{item?.title}</Text>
+              <Text className="font-bold max-w-[90px] space-x-2 mt-2" style={{fontFamily: 'Sarala_400Regular'}}>{item?.title}</Text>
               </Skeleton>
               </View>
               </Skeleton.Group>
@@ -144,11 +144,11 @@ const HomeScreen = () => {
           />
       </Animated.View>
       <View className="mt-10"> 
-          <Text className="mx-5 text-xl font-semibold mb-5">Tv Shows Arriving Today!</Text>
+          <Text className="mx-5 text-xl font-semibold mb-5" style={{fontFamily: 'Poppins_500Medium'}}>Tv Shows Arriving Today!</Text>
           <HorizontalMoviesData data={arrivingToday} navigation={navigation} media={"tv"}/>
           </View>
           <View className="mt-5"> 
-          <Text className="mx-5 text-lg font-normal mb-5">Popular Movies in your Region!</Text>
+          <Text className="mx-5 text-lg font-semibold mb-5" style={{fontFamily: 'Poppins_500Medium'}}>Popular Movies in your Region!</Text>
           <HorizontalMoviesData data={nowplayingData} navigation={navigation} media={"movie"}/>
           </View>
         </>

@@ -9,7 +9,7 @@ import {EXPO_PUBLIC_API_URL, EXPO_TEST_TOKEN } from '@env'
 import {  Ionicons } from '@expo/vector-icons';
 import { Cake, BarChart } from "lucide-react-native";
 import HorizontalCarousel from "../components/HorizontalCarousel";
-import { FlatList } from "react-native-gesture-handler";
+import VerticalCarousel from "../components/VerticalCarousel";
 const PAGE_WIDTH = Dimensions.get("screen").width;
 const CastDetailsScreen = ({navigation, route}) => {
   const [peopleDetails, setpeopleDetails] = useState([]);
@@ -74,29 +74,11 @@ const Wrapper = ({show, text})=>{
   return <Animated.ScrollView showsVerticalScrollIndicator={false} sharedTransitionTag="sharedTagsss">
     {/* images and stuff */}
     <Animated.View entering={FadeInLeft} exiting={FadeOutRight}>
-        <FlatList 
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        data={images}
-        renderItem={({ item }) => (
-          <>
-          {console.log("IIIIIIIII",item)}
-          <Animated.Image source={{uri: imageUrl+item?.file_path}}
-          style={{
-              width: PAGE_WIDTH,
-              resizeMode: 'cover',
-              height: 400,
-              borderBottomLeftRadius: 30,
-              borderBottomRightRadius: 30
-          }}
-          />
-          </>
-        )
-        }
-        />
+        {/* Vertical Caraousel */}
+        <VerticalCarousel data={images}/>
         {/* for name and stuff */}
         <SafeAreaView className="">
-            <Text className="text-3xl font-bold relativ mb-8 text-center mt-5 text-[#6936f5] opacity-[0.8]">{peopleDetails?.name}</Text>
+            <Text className="text-3xl font-bold relativ mb-8 text-center mt-5 text-[#6936f5] opacity-[0.8]" style={{fontFamily: "Prompt_600SemiBold"}}>{peopleDetails?.name}</Text>
 
             {/* for birthday */}
             <View className="flex flex-row items-center gap-1  bottom-5 justify-around">
@@ -116,10 +98,10 @@ const Wrapper = ({show, text})=>{
             {/* wrap inside hide show */}
             <Text className="mx-5 text-xl">Biography</Text>
             <View className="flex flex-row flex-wrap">
-            <Text className="text-md font-regular p-2 mt-3 mx-2">{peopleDetails?.biography}</Text>
+            <Text className="text-md font-regular p-2 mt-3 mx-2" style={{fontFamily: "Ubuntu_400Regular", lineHeight: 18}}>{peopleDetails?.biography}</Text>
             </View>
             <View className="mx-5">
-              <Text className="text-xl font-semibold">FilmoGraphy</Text>
+              <Text className="text-xl font-semibold" style={{fontFamily: "Prompt_600SemiBold", marginTop: 15}}>FilmoGraphy</Text>
               <View className="mt-5">
               <HorizontalCarousel check={creditsDetails} navigate={navigate}/>
               </View>

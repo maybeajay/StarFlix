@@ -190,8 +190,8 @@ const AfterLogin = () => {
       }}
     >
       <Stack.Screen name="HomeScreen" component={BottomNavigator} 
-       options={({ route }) => ({
-        headerShown: false
+      options={({ route }) => ({
+        title: route.name === 'Home' ? 'Home' : null,
       })}/>
       <Stack.Screen name="Movie Details" component={MovieDetails} />
       <Stack.Screen name="People Details" component={CastDetailsScreen} options={{
@@ -212,8 +212,10 @@ const DrawerNav = () => {
       <Drawer.Screen
         name="Home"
         component={AfterLogin}
-        options={({  }) => ({
-          headerShown: true,
+        options={({ route}) => ({
+          headerTitle: route.name === 'Home' ? 'Home' : null,
+          // headerShown: false,
+          headerTransparent: true,
           drawerIcon: ({focused}) =>{
             return <Home size={30} color= {focused ? "#6936f5" : "black"}/>
           }
