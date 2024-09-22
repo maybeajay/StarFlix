@@ -63,7 +63,7 @@ const CustomItem = ({index, animationValue, check }) => {
       }
       {
         check?.character &&  <View className="flex flex-row items-center">
-        <Text className="font-normal text-xl text-white">character: </Text>
+        <Text className="font-normal text-xl text-black">character: </Text>
         <Text className="text-md text-white">{check?.character}</Text>
         </View>
       }
@@ -96,7 +96,7 @@ function HorizontalCarousel({ check, navigate }) {
     <View style={{ flex: 1 }}>
       <Carousel
         loop={false}
-        autoPlay={false}
+        autoPlay={true}
         style={{ width: PAGE_WIDTH , height: PAGE_HEIGHT-650, marginBottom: 15, padding: 5 }}
         width={PAGE_WIDTH}
         data={check}

@@ -6,6 +6,7 @@ import { imageUrl } from '../constant';
 // added dependencies
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Animated from 'react-native-reanimated';
+import EvilIcons from '@expo/vector-icons/EvilIcons';
 
 const HorizontalMoviesData = ({data, navigation, media}) => {
     return (
@@ -43,7 +44,7 @@ const HorizontalMoviesData = ({data, navigation, media}) => {
                   <Text className="bg-transparent text-white mt-2 text-md">
                     {Math.round(item?.vote_average*10)/10}
                   </Text>
-                  <Ionicons name="md-star" size={17} color="gold" style={{marginTop: 4, marginLeft: 6}}/>
+                  <EvilIcons name="star" size={17} color="gold" style={{marginVertical: "auto", marginLeft: 6}}/>
                   </View>
                 </View>
                 </View>

@@ -13,7 +13,7 @@ import SearchScreen from "./SearchScreen";
 import { Search, Home, Tv, Heart } from "lucide-react-native";
 import { Flame } from "lucide-react-native";
 import { createStackNavigator } from "@react-navigation/stack";
-import MovieDetails from "../screens/MovieDetails";
+// import MovieDetails from "../screens/MovieDetails";
 import CastDetailsScreen from "../screens/CastDetailsScreen";
 import VideoPlayer from "../components/VideoPlayer";
 import PlaceHolder from "../components/PlaceHolder";
@@ -33,6 +33,7 @@ import { ImageBackground, Image,
   StyleSheet,
   Switch, Text, } from "react-native";
 import HorizontalCarousel from "../components/HorizontalCarousel";
+import MovieDetails from "./MovieDetails";
 
 // screens navigator
 const Tab = createBottomTabNavigator();
@@ -258,7 +259,7 @@ const Navigator = () => {
   }
   return (
     <NavigationContainer>
-      {userToken != null ? <DrawerNav /> : <FirstAuth />}
+      {userToken !== null ? <DrawerNav /> : <FirstAuth />}
     </NavigationContainer>
   );
 };

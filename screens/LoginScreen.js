@@ -6,9 +6,8 @@ import {
   Text,
   SafeAreaView,
   TouchableOpacity,
-  ImageBackground,
+  Image,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { AuthContext } from "../components/context/AuthContext";
 import { FIREBAE_AUTH } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -91,6 +90,7 @@ const LoginScreen = () => {
   };
 
   const handleLogin = ()=>{
+    console.log("USER DATA", userData)
     if(userData.username ==null || userData.username==""){
       setemailError("username is required");
       return ;
@@ -110,38 +110,69 @@ const LoginScreen = () => {
         flex: 1,
         alignItems: "center",
         height: "100%",
+        backgroundColor: "#000",
       }}
     >
-      <Text className="text-4xl font-bold text-indigo-500 mt-[10vh]">
-        Lets Get You Started
+      <Image
+        source={require("../assets/Avengers.jpg")}
+        style={{
+          position: 'absolute',
+          width: '100%',
+          height: '100%',
+          opacity: 0.2,
+        }}
+      />
+
+      <Text className="text-3xl font-bold text-white mt-[10vh]">
+        Login to Your Account
       </Text>
+
       <View className="flex flex-col justify-center items-center w-full h-4/5">
         <TextInput
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-gray-700 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 w-[80%]"
-          placeholder="Username"
-          value={userData.email}
+          className="bg-gray-900 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-gray-700 block p-2.5 w-[80%] border border-gray-600 mt-6"
+          placeholder="username"
+          placeholderTextColor="#aaa"
+          value={userData.username}
           onChangeText={(text) => handleChange("username", text)}
         />
         {emailError && <Text className="text-red-500">{emailError}</Text>}
+
         <TextInput
           secureTextEntry={true}
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 w-[80%] mt-10"
+          className="bg-gray-900 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 w-[80%] mt-5 border border-gray-600"
           placeholder="Password"
+          placeholderTextColor="#aaa"
           value={userData.password}
           onChangeText={(text) => handleChange("password", text)}
-          
         />
-        {passError && <Text className="text-red-500 ">{passError}</Text>}
-        <TouchableOpacity className="w-80 h-10 bg-white mt-6 rounded-xl flex justify-center">
-          <Text className="text-center" onPress={() => handleLogin()}>
-            Login
-          </Text>
+        {passError && <Text className="text-red-500">{passError}</Text>}
+
+        {/* Remember Me and Forgot Password */}
+        <View className="flex flex-row justify-between w-[80%] mt-5">
+          <View className="flex flex-row items-center">
+            {/* <CheckBox value={rememberMe} onValueChange={setRememberMe} /> */}
+            <Text className="text-white ml-2">Remember me</Text>
+          </View>
+          <TouchableOpacity>
+            <Text className="text-blue-500">Forgot the password?</Text>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity
+          className="w-80 h-12 bg-indigo-600 mt-6 rounded-xl flex justify-center"
+          onPress={() => handleLogin()}
+        >
+          <Text className="text-center text-white text-lg">Sign in</Text>
         </TouchableOpacity>
 
+        {/* Create Account Link */}
         <View className="mt-5 flex justify-center">
-          <Text className="text-blue-500 text-center">Don't have an TMDB Account yet?</Text>
-          <TouchableOpacity onPress={()=>Linking.openURL("https://www.themoviedb.org/signup")} className="w-80 h-10 mt-6 rounded-xl flex justify-center bg-indigo-500">
-            <Text className="text-center text-white">Create one</Text>
+          <Text className="text-gray-300 text-center">Don't have a TMDB Account yet?</Text>
+          <TouchableOpacity
+            onPress={() => Linking.openURL("https://www.themoviedb.org/signup")}
+            className="w-80 h-12 mt-5 rounded-xl flex justify-center "
+          >
+            <Text className="text-center text-blue-600">Create one</Text>
           </TouchableOpacity>
         </View>
       </View>

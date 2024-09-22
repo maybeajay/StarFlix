@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import React, {createContext, useEffect, useState} from "react";
-import {EXPO_PUBLIC_API_URL, EXPO_PUBLIC_ACCESS_TOKEN} from "@env"
+import {EXPO_PUBLIC_API_URL, EXPO_PUBLIC_ACCESS_TOKEN,EXPO_PUBLIC_API_KEY} from "@env"
 export const AuthContext = createContext();
 
 export const AuthProvider = ({children})=>{
@@ -25,22 +25,26 @@ export const AuthProvider = ({children})=>{
             
         }
     }
-    useEffect(()=>{
-        getRequestToken();
-    }, [])
     const Login = async (userData)=>{
+        getRequestToken();
         let result = await AsyncStorage.getItem("RequestToken");
         let data = {...userData, request_token: result};
-        console.log("DATAAAA", data)
         setLoading(true);
         try {
-            const res = await axios.post(`${EXPO_PUBLIC_API_URL}authentication/token/validate_with_login`, data, Headers);
+            const res = await axios.post(`${EXPO_PUBLIC_API_URL}authentication/token/validate_with_login`, data, {
+                headers:{
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                Authorization: EXPO_PUBLIC_ACCESS_TOKEN
+                }
+            });
             if(res?.data?.success == true){
             await AsyncStorage.setItem("userToken", res?.data?.request_token)
             }
         } catch (error) {
             console.log(error);
-            console.log("CATCHH");
+            console.log("CATCHH", error);
+            setLoading(false);
         }finally{
             setLoading(false);
         }

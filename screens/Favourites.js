@@ -2,7 +2,7 @@ import { View, Text, ToastAndroid, Dimensions, Image, Pressable, StyleSheet, Pla
 import React, { useCallback, useContext, useState } from 'react'
 import { AuthContext } from '../components/context/AuthContext'
 import axios from 'axios';
-import {EXPO_PUBLIC_API_URL, EXPO_TEST_TOKEN } from '@env'
+import {EXPO_PUBLIC_API_URL, EXPO_PUBLIC_ACCESS_TOKEN } from '@env'
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import CustomCarousel from 'carousel-with-pagination-rn';
 import Animated from 'react-native-reanimated';
@@ -18,7 +18,7 @@ export default function Favourites({navigation}) {
     headers: {
       accept: "application/json",
       'content-type': 'application/json',
-      Authorization: EXPO_TEST_TOKEN,
+      Authorization: EXPO_PUBLIC_ACCESS_TOKEN,
     },
   }
   const getFavouritesMovies = async()=>{
