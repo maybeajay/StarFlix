@@ -16,7 +16,8 @@ import { useNavigation } from '@react-navigation/native';
 import SkeletonLoader from "expo-skeleton-loader";
 import CardLoader from "../common/CardLoader";
 import Animated, { useSharedValue } from "react-native-reanimated";
-import {EXPO_PUBLIC_API_URL, EXPO_TEST_TOKEN } from '@env'
+import EvilIcons from '@expo/vector-icons/EvilIcons';
+import {EXPO_PUBLIC_API_URL, EXPO_PUBLIC_ACCESS_TOKEN } from '@env'
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [upcomingMovies, setupcomingMovies] = useState([]);
@@ -30,10 +31,10 @@ const HomeScreen = () => {
   const Headers = {
     headers: {
       accept: "application/json",
-      Authorization: EXPO_TEST_TOKEN,
+      Authorization: EXPO_PUBLIC_ACCESS_TOKEN,
     },
   }
-  console.log("TOKENN", EXPO_TEST_TOKEN);
+  console.log("TOKENN", EXPO_PUBLIC_ACCESS_TOKEN);
   const getupMoviesDetails = async () => {
     try {
       const res = await axios.get(`${EXPO_PUBLIC_API_URL}movie/upcoming?language=en-US&page=1`, Headers);

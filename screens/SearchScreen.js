@@ -15,7 +15,7 @@ import { Search } from "lucide-react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import { imageUrl } from "../constant";
-import {EXPO_PUBLIC_API_URL, EXPO_TEST_TOKEN } from '@env'
+import {EXPO_PUBLIC_API_URL, EXPO_PUBLIC_ACCESS_TOKEN } from '@env'
 
 // added imports
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -34,7 +34,7 @@ const SearchScreen = ({navigation}) => {
         {
           headers: {
             accept: "application/json",
-            Authorization: EXPO_TEST_TOKEN,
+            Authorization: EXPO_PUBLIC_ACCESS_TOKEN,
           },
         }
       );
@@ -51,7 +51,7 @@ const SearchScreen = ({navigation}) => {
       const res = await axios.get(EXPO_PUBLIC_API_URL+`genre/movie/list?language=en`, {
         headers: {
           accept: "application/json",
-          Authorization: EXPO_TEST_TOKEN,
+          Authorization: EXPO_PUBLIC_ACCESS_TOKEN,
         },
       });
       await setGenres(res?.data?.genres);

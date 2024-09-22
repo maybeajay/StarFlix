@@ -14,7 +14,7 @@ import axios from "axios";
 import { AuthContext } from "../components/context/AuthContext";
 import HorizontalMoviesData from "../components/HorizontalMoviesData";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import {EXPO_PUBLIC_API_URL, EXPO_TEST_TOKEN } from '@env'
+import {EXPO_PUBLIC_API_URL, EXPO_PUBLIC_ACCESS_TOKEN } from '@env'
 const Trending = ({navigation}) => {
   const [popularMovies, setPopularMovies] = useState([]);
   const [trendingSeries, settrendingSeries] = useState([]);
@@ -28,7 +28,7 @@ const Trending = ({navigation}) => {
       const res = await axios.get(EXPO_PUBLIC_API_URL+`trending/movie/day?language=en-US`, {
         headers:{
           accept: "application/json",
-          Authorization: EXPO_TEST_TOKEN,
+          Authorization: EXPO_PUBLIC_ACCESS_TOKEN,
         }
       });
       await setPopularMovies(res?.data?.results);
@@ -45,7 +45,7 @@ const Trending = ({navigation}) => {
         {
           headers: {
             accept: "application/json",
-            Authorization: EXPO_TEST_TOKEN,
+            Authorization: EXPO_PUBLIC_ACCESS_TOKEN,
           },
         }
       );
@@ -60,7 +60,7 @@ const Trending = ({navigation}) => {
       const res = await axios.get(EXPO_PUBLIC_API_URL+`tv/on_the_air?language=en-US&page=1`, {
         headers:{
           accept: "application/json",
-          Authorization: EXPO_TEST_TOKEN
+          Authorization: EXPO_PUBLIC_ACCESS_TOKEN
         }
       })
       await setarrivingSoon(res?.data?.results);
@@ -77,7 +77,7 @@ const Trending = ({navigation}) => {
       const res = await axios.get(EXPO_PUBLIC_API_URL+`tv/top_rated?language=en-US&page=1`, {
         headers:{
           accept: "application/json",
-          Authorization: EXPO_TEST_TOKEN,
+          Authorization: EXPO_PUBLIC_ACCESS_TOKEN,
         }
       })
       await settopRated(res?.data?.results);

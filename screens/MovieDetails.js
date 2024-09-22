@@ -25,7 +25,7 @@ import "moment-duration-format";
 import { Skeleton } from "moti/skeleton";
 import UserReviews from '../components/UserReviews'
 import Animated, { FadeIn, FadeInLeft, FadeOut, FadeOutRight, LightSpeedInLeft, LightSpeedOutRight, SharedTransition, withSpring  } from 'react-native-reanimated';
-import {EXPO_PUBLIC_API_URL, EXPO_TEST_TOKEN } from '@env'
+import {EXPO_PUBLIC_API_URL, EXPO_PUBLIC_ACCESS_TOKEN } from '@env'
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 const AnimatedText = Animated.createAnimatedComponent(Text);
 
@@ -43,7 +43,7 @@ const MovieDetails = ({ route, navigation }) => {
     headers: {
       accept: "application/json",
       'content-type': 'application/json',
-      Authorization: EXPO_TEST_TOKEN,
+      Authorization: EXPO_PUBLIC_ACCESS_TOKEN,
     },
   }
 
@@ -123,7 +123,7 @@ const MovieDetails = ({ route, navigation }) => {
       const res = await axios.get(EXPO_PUBLIC_API_URL+`${credsUrl}`, {
         headers: {
           accept: "application/json",
-          Authorization: EXPO_TEST_TOKEN,
+          Authorization: EXPO_PUBLIC_ACCESS_TOKEN,
         },
       });
       await setCrew(res?.data?.cast);
@@ -176,7 +176,7 @@ const [isShown, setShown] = useState(false);
             className="flex items-center"
             style={{
               backgroundColor: "white",
-              padding: 10,
+              paddingTop: 20,
             }}
           >
              <Image
@@ -193,6 +193,7 @@ const [isShown, setShown] = useState(false);
      )}
      renderContentBackground = {()=>(
       <Animated.ScrollView showsVerticalScrollIndicator={false} ref={scrollViewRef}
+      contentContainerStyle={{paddingTop: 30}}
       sharedTransitionTag="tag">
         <View className="mt-5">
           <Skeleton.Group show={loading} colorMode={"light"}>
@@ -203,7 +204,7 @@ const [isShown, setShown] = useState(false);
             <View className="relative mb-5">
               <View className="w-[100%] flex flex-row items-center gap-1  rounded- absolute inset-0 filter blur-md justify-around font-semibold ">
                 <Ionicons
-                  name="md-star"
+                  name="star"
                   size={20}
                   color="gold"
                   className="mt-2"

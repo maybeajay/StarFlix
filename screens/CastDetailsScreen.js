@@ -5,7 +5,7 @@ import { ScrollView, SafeAreaView, View, Text, Image, Dimensions } from "react-n
 
 import { imageUrl } from "../constant";
 import Animated, {FadeInLeft, FadeOutRight} from "react-native-reanimated";
-import {EXPO_PUBLIC_API_URL, EXPO_TEST_TOKEN } from '@env'
+import {EXPO_PUBLIC_API_URL, EXPO_PUBLIC_ACCESS_TOKEN } from '@env'
 import {  Ionicons } from '@expo/vector-icons';
 import { Cake, BarChart } from "lucide-react-native";
 import HorizontalCarousel from "../components/HorizontalCarousel";
@@ -22,7 +22,7 @@ const CastDetailsScreen = ({navigation, route}) => {
   const Headers = {
     headers: {
       accept: "application/json",
-      Authorization: EXPO_TEST_TOKEN,
+      Authorization: EXPO_PUBLIC_ACCESS_TOKEN,
     },
   }
   const getCastDetailsById = async () => {

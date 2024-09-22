@@ -49,7 +49,7 @@ const UserReviews = ({ data }) => {
             </View>
             <View className="flex flex-row mt-2 items-center">
               <Ionicons
-                name="md-star"
+                name="star"
                 size={20}
                 color="gold"
                 className="mt-2"
